@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    environment:
+      - BASE_URL=http://localhost:5013
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+    command: [ "yarn", "start" ]
+  postgres:
+    image: postgres:16
+    container_name: live-coding
+    env_file: "./.env"
+ 
+
+  api:
+    env_file: "./.env"  
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5013:5013"
+    
+
+    depends_on:
+      - postgres
+
+    volumes:
+      - ./backend:/app
+      - /app/obj/
+      - /app/bin/
+  
+  
