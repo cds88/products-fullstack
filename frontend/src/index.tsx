@@ -1,23 +1,19 @@
-import {createRoot} from 'react-dom/client'
-import ReactDOM from 'react-dom'
-import App from './App'
- 
+import { createRoot } from "react-dom/client";
+import App from "./App";
 
+const rootDom = document.getElementById("root");
 
-const rootDom = document.getElementById("root")
+const root = createRoot(rootDom, {
+  onUncaughtError(error, errorInfo) {
+    console.log("unCaughtError");
+    console.error(error);
+    console.error(errorInfo);
+  },
+  onCaughtError(error, errorInfo) {
+    console.log("caught error ");
+    console.error(error);
+    console.error(errorInfo);
+  },
+});
 
-
-
-const root = createRoot(rootDom, { onUncaughtError(error, errorInfo) {
-    console.log("unCaughtError")
-    console.log(error)
-    console.log(errorInfo)
-}, onCaughtError(error, errorInfo) {
-    console.log("caught error ")
-},})
-
-root.render(<App/>)
-
-
-
-
+root.render(<App />);

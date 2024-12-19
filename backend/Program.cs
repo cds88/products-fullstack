@@ -1,81 +1,53 @@
-using System.Text.Json;
-using Live.Models;
+
 using Microsoft.EntityFrameworkCore;
+
+using Microsoft.AspNetCore.OData;
+using Backend.Utils;
+using Backend.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options=> options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 builder.Services.AddHttpClient();
-
-builder.Services.AddCors(options=>{
-    options.AddDefaultPolicy(builder=>{
+builder.Services.AddScoped<Fetcher>(sp =>
+{
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    return new Fetcher(httpClientFactory);
+});
+builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy().Expand().SetMaxTop(100).Count().EnableQueryFeatures().AddRouteComponents("odata", EdmModelBuilder.GetEdmModel())).AddJsonOptions(options=>{
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
-//builder.WebHost.UseUrls("http//0.0.0.0:5013");
-builder.Services.AddHostedService<OnStartupHostedService>();
+builder.WebHost.UseUrls("http://0.0.0.0:5013");
+//builder.Services.AddHostedService<StartupRemoteAPIService>();
 
 var app = builder.Build();
 
 
-// var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-// lifetime.ApplicationStarted.Register(()=>{
 
-//     using var scope = app.Services.CreateScope();
-//     var httpClientFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
-//     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-//     var client = httpClientFactory.CreateClient();
-//     Console.WriteLine($"client is ");
-// });
-
- 
-
-// using (var scope = app.Services.CreateScope())
-// {
-//     var httpClientFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
-//     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-//     int limit =30;                  
-//     while(limit  <300) {
-//         var client = httpClientFactory.CreateClient();
-//         var response = await client.GetAsync($"https://dummyjson.com/products");
-//         response.EnsureSuccessStatusCode();
-//         var json = await response.Content.ReadAsStringAsync();
-        
-//         var productsResponse = JsonSerializer.Deserialize<ApiResponseModel>(json, new JsonSerializerOptions{
-//             PropertyNameCaseInsensitive = true
-//         });
-//         Console.WriteLine("----qwe");
-
-//         Console.WriteLine(JsonSerializer.Serialize(productsResponse));
-        
-
-//         // dbContext.Products.AddRange(products!);
-        
-//         // await dbContext.SaveChangesAsync();
-        
-//         limit+=30;
-//         break;
-//     }
-
-
-// }
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseHsts();
+
 app.UseHttpsRedirection();
 
 app.UseCors();
 
+app.MapControllers();
+
 app.Run();
- 

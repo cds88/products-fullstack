@@ -19,19 +19,21 @@ services:
       - NODE_ENV=development
     command: [ "yarn", "start" ]
   postgres:
-    image: postgres:16
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     container_name: live-coding
     env_file: "./.env"
- 
+    volumes:
+      - live_coding_postgres_data:/var/lib/postgresql/data
 
   api:
-    env_file: "./.env"  
+    env_file: "./.env"
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
     ports:
       - "5013:5013"
-    
 
     depends_on:
       - postgres
@@ -40,5 +42,6 @@ services:
       - ./backend:/app
       - /app/obj/
       - /app/bin/
-  
-  
+
+volumes:
+  live_coding_postgres_data:

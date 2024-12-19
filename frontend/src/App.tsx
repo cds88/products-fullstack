@@ -1,15 +1,7 @@
- 
+import VirtualizedTable from "./Table";
 
-const App =()=>{
- 
+const App = () => {
+  return <VirtualizedTable />;
+};
 
-    return <div>
-test
-    
-    </div>
-}
-
-
-
-
-export default App
+export default App;

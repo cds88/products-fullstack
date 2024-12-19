@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -9,15 +10,16 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "index.html",
-      //  excludeChunks:["notates"]
+      template: "index.html", 
     }),
-    // new TsconfigPathsPlugin({
-    //     configFile: './tsconfig.json',
-    //   }),
-    // new Dotenv({
-    //     path:`./.env.${env.mode}`
-    // }),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          BASE_URL: JSON.stringify(process.env.BASE_URL),
+        },
+      },
+    })
+ 
   ],
   module: {
     rules: [
