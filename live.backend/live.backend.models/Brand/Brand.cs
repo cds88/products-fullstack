@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models
+namespace Live.Backend.Models
 {
     public class Brand
     {

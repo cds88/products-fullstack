@@ -1,8 +1,8 @@
 using System.Text.Json;
-using Backend.DTOs;
-using Backend.Models;
+using Live.Backend.DTOs;
+using Live.Backend.Models;
 
-namespace Backend.Utils
+namespace Live.Backend.Utils
 {
     internal class Fetcher
     {

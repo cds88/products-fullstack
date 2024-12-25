@@ -1,4 +1,4 @@
-namespace Backend.DictionaryExtensions
+namespace Live.Backend.DictionaryExtensions
 {
     public static class DictionaryExtensions
     {

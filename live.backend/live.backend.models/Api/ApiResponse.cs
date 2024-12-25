@@ -1,7 +1,8 @@
 using System.Text;
-using Backend.DTOs;
 
-namespace Backend.Models
+using Live.Backend.DTOs;
+
+namespace Live.Backend.Models
 {
     public class ApiResponse
     {

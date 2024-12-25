@@ -1,8 +1,8 @@
-using Backend.Models;
+using Live.Backend.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 
-namespace Backend.Utils
+namespace Live.Backend.Utils
 {
     public static class EdmModelBuilder
     {

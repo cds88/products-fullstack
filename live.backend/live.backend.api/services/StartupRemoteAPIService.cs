@@ -1,10 +1,12 @@
-using Backend.Models;
-using Backend.DTOs;
+using Live.Backend.Models;
+using Live.Backend.DTOs;
 using Microsoft.EntityFrameworkCore;
-using Backend.Utils;
-using Backend.DictionaryExtensions;
+using Live.Backend.Utils;
+using Live.Backend.DictionaryExtensions;
 
-namespace Backend.Services
+using Live.Backend.Dbaccess;
+
+namespace Live.Backend.Services
 {
     public class StartupRemoteAPIService : IHostedService
     {

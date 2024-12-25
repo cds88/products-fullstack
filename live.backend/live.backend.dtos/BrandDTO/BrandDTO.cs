@@ -1,4 +1,4 @@
-namespace Backend.DTOs
+namespace Live.Backend.DTOs
 {
     public class BrandDTO
     {

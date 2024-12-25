@@ -1,4 +1,4 @@
-namespace Backend.Models
+namespace Live.Backend.Models
 {
     public class Product
     {

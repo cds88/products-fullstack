@@ -1,5 +1,5 @@
 
-namespace Backend.Utils
+namespace Live.Backend.Utils
 {
     public class PaginatedResponse<T>
     {

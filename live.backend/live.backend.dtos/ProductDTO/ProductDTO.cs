@@ -1,6 +1,6 @@
-using Backend.Models;
 
-namespace Backend.DTOs
+
+namespace Live.Backend.DTOs
 {
         public class ProductDTO  
     {

@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Backend.Models;
+using Live.Backend.Models;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Backend.DTOs;
+using Live.Backend.DTOs;
+using Live.Backend.Dbaccess;
 
-namespace Backend.Controllers
+namespace Live.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,6 +17,12 @@ namespace Backend.Controllers
         public ProductsController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        [Route("test")]
+        [HttpGet]
+        public string Test(){
+            return "Qwe";
         }
 
 

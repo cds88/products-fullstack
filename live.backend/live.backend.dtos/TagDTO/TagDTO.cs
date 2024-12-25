@@ -1,6 +1,6 @@
-namespace Backend.DTOs
+namespace Live.Backend.DTOs
 {
-    public class CategoryDTO
+    public class TagDTO
     {
         public string Name {get;set;}
     }
