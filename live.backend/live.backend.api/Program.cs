@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddConfiguredDbContext(builder.Configuration);
 
-
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
+//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Fetcher>(sp =>
 {
@@ -27,14 +27,14 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMelthod();
     });
 });
 
 
 
 builder.WebHost.UseUrls("http://0.0.0.0:5013");
-builder.Services.AddHostedService<StartupRemoteAPIService>();
+//builder.Services.AddHostedService<StartupRemoteAPIService>();
 
 var app = builder.Build();
 
