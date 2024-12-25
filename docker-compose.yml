@@ -34,6 +34,9 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "5013:5013"
+    
+    environment:
+      - DB_CONNECTION_STRING="Host=postgres;Database=live;Username=postgres;Password=postgres"
 
     depends_on:
       - postgres

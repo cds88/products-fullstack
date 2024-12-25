@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "live.backend.models", "live
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "live.backend.dtos", "live.backend.dtos\live.backend.dtos.csproj", "{4E3CD704-8D2B-4475-A112-93077F36413D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "live.backend.utils", "live.backend.utils\live.backend.utils.csproj", "{62C3E748-9DD0-4338-85C0-6CD92FC38C6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{4E3CD704-8D2B-4475-A112-93077F36413D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E3CD704-8D2B-4475-A112-93077F36413D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E3CD704-8D2B-4475-A112-93077F36413D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C3E748-9DD0-4338-85C0-6CD92FC38C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C3E748-9DD0-4338-85C0-6CD92FC38C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C3E748-9DD0-4338-85C0-6CD92FC38C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C3E748-9DD0-4338-85C0-6CD92FC38C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

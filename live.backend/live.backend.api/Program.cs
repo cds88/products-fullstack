@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Fetcher>(sp =>
@@ -33,7 +34,7 @@ builder.Services.AddCors(options =>
 
 
 builder.WebHost.UseUrls("http://0.0.0.0:5013");
-//builder.Services.AddHostedService<StartupRemoteAPIService>();
+builder.Services.AddHostedService<StartupRemoteAPIService>();
 
 var app = builder.Build();
 
