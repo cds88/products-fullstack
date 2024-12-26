@@ -11,9 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddConfiguredDbContext(builder.Configuration);
+//builder.Services.AddConfiguredDbContext(builder.Configuration);
+DbAccessTest.MakeTest();
+DbAccessTest.MakeTest();
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Fetcher>(sp =>
 {
@@ -24,6 +26,9 @@ builder.Services.AddScoped<Fetcher>(sp =>
 builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy().Expand().SetMaxTop(100).Count().EnableQueryFeatures().AddRouteComponents("odata", EdmModelBuilder.GetEdmModel())).AddJsonOptions(options=>{
             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
+
+
+
 
 builder.Services.AddCors(options =>
 {
