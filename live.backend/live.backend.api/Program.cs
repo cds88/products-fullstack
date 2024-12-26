@@ -20,14 +20,16 @@ builder.Services.AddScoped<Fetcher>(sp =>
     var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
     return new Fetcher(httpClientFactory);
 });
+
 builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy().Expand().SetMaxTop(100).Count().EnableQueryFeatures().AddRouteComponents("odata", EdmModelBuilder.GetEdmModel())).AddJsonOptions(options=>{
             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMelthod();
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
