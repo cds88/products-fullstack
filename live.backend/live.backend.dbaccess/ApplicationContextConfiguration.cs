@@ -6,7 +6,7 @@ namespace Live.Backend.Dbaccess
 {
     public static class DbContextConfiguration
     {
-        public static void AddConfiguredDbContext(IServiceCollection services, IConfiguration configuration)
+        public static void AddConfiguredDbContext(this IServiceCollection services )
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {

@@ -2,7 +2,7 @@ using Live.Backend.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 
-namespace Live.Backend.Utils
+namespace Live.Backend.Controllers
 {
     public static class EdmModelBuilder
     {

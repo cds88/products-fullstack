@@ -1,22 +1,19 @@
-using Live.Backend.Models;
-using Live.Backend.DTOs;
+
 using Microsoft.EntityFrameworkCore;
-using Live.Backend.Utils;
-using Live.Backend.DictionaryExtensions;
-
 using Live.Backend.Dbaccess;
+using Live.Backend.DTOs;
+using Live.Backend.Models;
+using Live.Backend.Utils.Extensions;
 
-namespace Live.Backend.Services
+namespace Live.Backend.Utils.Http
 {
-    public class StartupRemoteAPIService : IHostedService
+    public class FetchedResultsHandler
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public StartupRemoteAPIService(IServiceProvider serviceProvider)
+        private readonly ApplicationDbContext _dbContext;
+        public  FetchedResultsHandler(ApplicationDbContext dbContext)
         {
-            _serviceProvider = serviceProvider;
+            _dbContext = dbContext;
         }
-
         private Dictionary<string, TEntity> AddMissingEntities<TEntity>(
             List<string> distinctNames,
             IReadOnlyDictionary<string, TEntity> existingEntities,
@@ -27,33 +24,26 @@ namespace Live.Backend.Services
                 .Where(name => !existingEntities.ContainsKey(name))
                 .ToDictionary(name => name, createEntity);
         }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StoreFetchedProducts(List<ProductDTO> productDTOs, CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var fetcher = scope.ServiceProvider.GetRequiredService<Fetcher>();
-
             try
             {
-                List<ProductDTO> productDTOs = await fetcher.FetchAll();
-
                 var categoriesDistinct = productDTOs.Select(dto => dto.Category).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
                 var brandsDistinct = productDTOs.Where(c => !string.IsNullOrWhiteSpace(c.Brand)).Select(dto => dto.Brand).Distinct().ToList();
                 var tagsDistinct = productDTOs.SelectMany(dto => dto.Tags.Select(t => t)).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
 
-                var existingCategories = await dbContext.Categories.Where(c => categoriesDistinct.Contains(c.Name)).ToDictionaryAsync(c => c.Name, cancellationToken);
-                var existingBrands = await dbContext.Brands.Where(b => brandsDistinct.Contains(b.Name)).ToDictionaryAsync(c => c.Name, cancellationToken);
-                var existingTags = await dbContext.Tags.Where(t => tagsDistinct.Contains(t.Name)).ToDictionaryAsync(t => t.Name, cancellationToken);
+                var existingCategories = await _dbContext.Categories.Where(c => categoriesDistinct.Contains(c.Name)).ToDictionaryAsync(c => c.Name, cancellationToken);
+                var existingBrands = await _dbContext.Brands.Where(b => brandsDistinct.Contains(b.Name)).ToDictionaryAsync(c => c.Name, cancellationToken);
+                var existingTags = await _dbContext.Tags.Where(t => tagsDistinct.Contains(t.Name)).ToDictionaryAsync(t => t.Name, cancellationToken);
 
 
                 var newCategories = AddMissingEntities(categoriesDistinct, existingCategories, name => new Category { Name = name });
                 var newBrands = AddMissingEntities(brandsDistinct, existingBrands, name => new Brand { Name = name });
                 var newTags = AddMissingEntities(tagsDistinct, existingTags, name => new Tag { Name = name });
 
-                dbContext.Categories.AddRange(newCategories.Values);
-                dbContext.Brands.AddRange(newBrands.Values);
-                dbContext.Tags.AddRange(newTags.Values);
+                _dbContext.Categories.AddRange(newCategories.Values);
+                _dbContext.Brands.AddRange(newBrands.Values);
+                _dbContext.Tags.AddRange(newTags.Values);
 
                 existingCategories.UnionWith(newCategories);
                 existingBrands.UnionWith(newBrands);
@@ -61,7 +51,7 @@ namespace Live.Backend.Services
 
 
                 var productIds = productDTOs.Select(dto => dto.Id).ToList();
-                var existingProducts = await dbContext.Products.Where(p => productIds.Contains(p.Id)).ToDictionaryAsync(p => p.Id, cancellationToken);
+                var existingProducts = await _dbContext.Products.Where(p => productIds.Contains(p.Id)).ToDictionaryAsync(p => p.Id, cancellationToken);
 
                 var dtosToCreate = productDTOs.Where(dto => !existingProducts.ContainsKey(dto.Id));
                 var dtosToUpdate = productDTOs.Where(dto => existingProducts.ContainsKey(dto.Id));
@@ -97,7 +87,7 @@ namespace Live.Backend.Services
                 }
 
 
-                dbContext.Products.AddRange(productsToCreate);
+                _dbContext.Products.AddRange(productsToCreate);
 
                 foreach (var dto in dtosToUpdate)
                 {
@@ -113,20 +103,20 @@ namespace Live.Backend.Services
                     existingProduct.Title = dto.Title;
                     existingProduct.UpdatedAt = dto.UpdatedAt;
                 }
-                await dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
             }
-            catch (HttpRequestException ex)
+            catch (DbUpdateException ex)
             {
-                Console.WriteLine("An error occurred while fetching products: " + ex.Message);
-            }
-        }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
+                Console.WriteLine("An error occurred while updating the database: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+
         }
     }
-
-
 }

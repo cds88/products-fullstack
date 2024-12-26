@@ -1,10 +1,12 @@
 using System.Text.Json;
 using Live.Backend.DTOs;
 using Live.Backend.Models;
+using System.Net.Http;
 
-namespace Live.Backend.Utils
+
+namespace Live.Backend.Utils.Http
 {
-    internal class Fetcher
+    public class Fetcher
     {
         private readonly HttpClient httpClient;
 
