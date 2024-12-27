@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Backend.Core.DTOs\backend.core.dtos.csproj" />
+    <ProjectReference Include="..\Backend.Core.DTOs\Backend.Core.DTOs.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

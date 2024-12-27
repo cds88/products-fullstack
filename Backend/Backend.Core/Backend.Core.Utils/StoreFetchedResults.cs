@@ -28,7 +28,7 @@ namespace Backend.Core.Utils.Http
             try
             {
                 var categoriesDistinct = productDTOs.Select(dto => dto.Category).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
-                var brandsDistinct = productDTOs.Where(c => !string.IsNullOrWhiteSpace(c.Brand)).Select(dto => dto.Brand).Distinct().ToList();
+                var brandsDistinct = productDTOs.Where(c => !string.IsNullOrWhiteSpace(c.Brand)).Select(dto => dto.Brand!).Distinct().ToList();
                 var tagsDistinct = productDTOs.SelectMany(dto => dto.Tags.Select(t => t)).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
 
                 var existingCategories = await _dbContext.Categories.Where(c => categoriesDistinct.Contains(c.Name)).ToDictionaryAsync(c => c.Name, cancellationToken);

@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Backend.Core.Dbaccess\backend.core.dbaccess.csproj" />
-    <ProjectReference Include="..\Backend.Core.DTOs\backend.core.dtos.csproj" />
-    <ProjectReference Include="..\Backend.Core.Models\backend.core.models.csproj" />
+    <ProjectReference Include="..\Backend.Core.Dbaccess\Backend.Core.Dbaccess.csproj" />
+    <ProjectReference Include="..\Backend.Core.DTOs\Backend.Core.DTOs.csproj" />
+    <ProjectReference Include="..\Backend.Core.Models\Backend.Core.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />

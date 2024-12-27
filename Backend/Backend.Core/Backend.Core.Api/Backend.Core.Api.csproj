@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Backend.Core.Models\Backend.Core.Models.csproj" />
+    <ProjectReference Include="..\Backend.Core.Dbaccess\Backend.Core.Dbaccess.csproj" />
+    <ProjectReference Include="..\Backend.Core.DTOs\Backend.Core.DTOs.csproj" />
+    <ProjectReference Include="..\Backend.Core.Utils\Backend.Core.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
