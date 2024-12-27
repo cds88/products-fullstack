@@ -18,6 +18,6 @@ ENV PATH="$PATH:/home/oem/.dotnet/tools"
 
 EXPOSE 5013
 
-CMD ["dotnet", "watch" , "run" , "--non-interactive", "--project", "Backend.Core.Api/Backend.Core.Api.csproj", "--urls", "http://0.0.0.0:5013"]
+CMD ["dotnet", "watch" , "run" , "--non-interactive", "--project", "Backend.Core/Backend.Core.Api/Backend.Core.Api.csproj", "--urls", "http://0.0.0.0:5013"]
 
 

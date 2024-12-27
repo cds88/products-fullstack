@@ -23,6 +23,7 @@ namespace Backend.Core.Models
         public DateTime UpdatedAt { get; set; }
 
         public ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
+
     }
 
     public class ProductTag

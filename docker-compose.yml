@@ -30,7 +30,7 @@ services:
   api:
     env_file: "./.env"
     build:
-      context: ./Backend/Backend.Core/Backend.Core.Api/ 
+      context: ./Backend/
       dockerfile: Dockerfile.dev
     ports:
       - "5013:5013"
@@ -42,25 +42,11 @@ services:
       - postgres
 
     volumes:
-      - ./Backend/Backend.Core:/app
+      - ./Backend:/app
       - /app/obj/
       - /app/bin/
 
-  # api:
-  #   env_file: "./.env"
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile.dev
-  #   ports:
-  #     - "5013:5013"
-
-  #   depends_on:
-  #     - postgres
-
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/obj/
-  #     - /app/bin/
+ 
 
 volumes:
   live_coding_postgres_data:

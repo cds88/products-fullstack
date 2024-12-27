@@ -6,7 +6,7 @@ using Backend.Core.Models;
 using Backend.Core.DTOs;
 using Backend.Core.Dbaccess;
 
-namespace Backend.Core.Controllers
+namespace Backend.Core.Api
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,31 +20,30 @@ namespace Backend.Core.Controllers
             _context = context;
             _productRepository = productRepository;
         }
-
         [HttpGet]
         [EnableQuery(MaxTop = 50, PageSize = 30)]
-        public IQueryable<ProductDTO> GetProducts()
+        public IActionResult GetProducts()
         {
-            return _productRepository.GetAll()
-            .Include(p => p.Category)
-            .Include(p => p.Brand)
-            .Include(p => p.ProductTags)
-            .ThenInclude(pt => pt.Tag)
-            .Select(p => new ProductDTO
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                Brand = p.Brand != null ? p.Brand.Name : "",
-                Category = p.Category != null ? p.Category.Name : "",
-                Price = p.Price,
-                Rating = p.Rating,
-                Thumbnail = p.Thumbnail,
-                UpdatedAt = p.UpdatedAt,
-                Tags = p.ProductTags.Select(pt => pt.Tag.Name).ToArray()
+            var products = _productRepository.GetAll()
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductTags)
+                .ThenInclude(pt => pt.Tag)
+                .Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Brand = p.Brand != null ? p.Brand.Name : "",
+                    Category = p.Category != null ? p.Category.Name : "",
+                    Price = p.Price,
+                    Rating = p.Rating,
+                    Thumbnail = p.Thumbnail,
+                    UpdatedAt = p.UpdatedAt,
+                    Tags = p.ProductTags.Select(pt => pt.Tag.Name).ToArray()
+                });
 
-            });
-
+            return Ok(products);
         }
 
 

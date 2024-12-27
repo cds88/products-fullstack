@@ -3,7 +3,7 @@ using Microsoft.OData.ModelBuilder;
 using Backend.Core.Models;
 
 
-namespace Backend.Core.Controllers
+namespace Backend.Core.Api
 {
     public static class EdmModelBuilder
     {

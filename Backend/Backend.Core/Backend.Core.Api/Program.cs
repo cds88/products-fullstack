@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.OData;
-using Backend.Core.Controllers;
+using Backend.Core.Api;
 using Backend.Core.Utils.Http;
 using Backend.Core.Dbaccess;
 
