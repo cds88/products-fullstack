@@ -21,20 +21,20 @@ namespace Backend.Tests.DbAccess
         [Fact]
         public async Task AddProduct_ShouldReturnAddedProduct()
         {
-            // Arrange
+            
             var context = GetInMemoryDbContext();
             var repository = new ProductRepository(context);
             var newProduct = new Product { Title = "Test Product", Price = 10 };
 
-            // Act
-            // Act
-            await repository.AddAsync(newProduct);  // No need to assign it to a variable
-            await repository.SaveAsync();  // Explicitly call SaveAsync to persist the changes
-            // Assert: Ensure that the product is in the database
+            
+            
+            await repository.AddAsync(newProduct);  
+            await repository.SaveAsync();  
+            
             var addedProduct = await context.Products.FirstOrDefaultAsync(p => p.Title == "Test Product");
-            Assert.NotNull(addedProduct);  // Ensure the product is added
-            Assert.Equal("Test Product", addedProduct.Title);  // Ensure the name matches
-            Assert.Equal(10, addedProduct.Price); // Assert that the product's price matches
+            Assert.NotNull(addedProduct);  
+            Assert.Equal("Test Product", addedProduct.Title);  
+            Assert.Equal(10, addedProduct.Price); 
         }
     }
 }

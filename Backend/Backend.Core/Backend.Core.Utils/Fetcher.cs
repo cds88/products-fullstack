@@ -38,20 +38,27 @@ namespace Backend.Core.Utils.Http
 
         public async Task<ApiResponse> FetchData(int skip)
         {
-            string url = $"https://dummyjson.com/products?limit=30&skip={skip}";
-
-            using var responseStream = await httpClient.GetStreamAsync(url);
-            var result = await JsonSerializer.DeserializeAsync<ApiResponse>(responseStream, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            });
+                string url = $"https://dummyjson.com/products?limit=30&skip={skip}";
 
-            if (result == null)
-            {
-                throw new InvalidOperationException("The request failed or response is not in expected format");
+                using var responseStream = await httpClient.GetStreamAsync(url);
+                var result = await JsonSerializer.DeserializeAsync<ApiResponse>(responseStream, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException("The request failed or response is not in expected format");
+                }
+
+                return result;
             }
-
-            return result;
+            catch (JsonException ex)
+            {
+                throw new InvalidOperationException("Failed to deserialize response", ex);
+            }
 
         }
 

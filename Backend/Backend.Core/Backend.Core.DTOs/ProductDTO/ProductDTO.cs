@@ -4,18 +4,18 @@ namespace Backend.Core.DTOs
 {
         public class ProductDTO  
     {
-        public int Id {get;set;}
-        required public string Title {get;set;}
-        public string Description {get;set;} = string.Empty;
-        required public string Category {get;set;} 
-        public string? Brand {get;set;} 
-        public decimal Price {get;set;}
-        public decimal Rating {get;set;}
+        public int Id {get;init;}
+        required public string Title {get;init;}
+        public string Description {get;init;} = string.Empty;
+        required public string Category {get;init;} 
+        public string? Brand {get;init;} 
+        public decimal Price {get;init;}
+        public decimal Rating {get;init;}
 
-        public string Thumbnail {get;set;} = string.Empty;
+        public string Thumbnail {get;init;} = string.Empty;
 
-        public string[] Tags {get;set;} = new string[0];
+        public string[] Tags {get;init;} = new string[0];
 
-        public DateTime UpdatedAt {get;set;}
+        public DateTime UpdatedAt {get;init;}
     }
 }
