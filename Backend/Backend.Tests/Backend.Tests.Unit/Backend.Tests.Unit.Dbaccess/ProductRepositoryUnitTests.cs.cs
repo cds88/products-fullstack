@@ -6,7 +6,7 @@ using Backend.Core.Models;
 
 
 
-namespace Backend.Tests.DbAccess
+namespace Backend.Tests.Unit.DbAccess
 {
     public class ProductRepositoryTests
     {

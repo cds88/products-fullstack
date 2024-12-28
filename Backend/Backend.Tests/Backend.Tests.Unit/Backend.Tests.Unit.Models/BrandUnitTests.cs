@@ -1,7 +1,7 @@
 using Backend.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Tests.Models
+namespace Backend.Tests.Unit.Models
 {
     public class BrandTests
     {

@@ -10,14 +10,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Backend.Tests.Api
+namespace Backend.Tests.Unit.Api
 {
-    public class ApiControllerTests
+    public class ProductsControllerUnitTest : IDisposable
     {
         private readonly ProductsController _controller;
         private readonly ApplicationDbContext _context;
 
-        public ApiControllerTests()
+        public ProductsControllerUnitTest()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase("TestDatabase")
@@ -51,9 +51,12 @@ namespace Backend.Tests.Api
         [Fact]
         public async Task GetProduct_ReturnsProduct()
         {
+
             var result = await _controller.GetProduct(1);
+
             var actionResult = Assert.IsType<ActionResult<ProductDTO>>(result);
             var productResult = Assert.IsType<ProductDTO>(actionResult.Value);
+
             Assert.Equal(1, productResult.Id);
             Assert.Equal("Product 1", productResult.Title);
         }
@@ -146,5 +149,13 @@ namespace Backend.Tests.Api
             var deletedProduct = await _context.Products.FindAsync(productToDelete.Id);
             Assert.Null(deletedProduct);
         }
+        public void Dispose()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+
+        }
     }
+
+
 }

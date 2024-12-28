@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Backend.Core.Models;
 using Backend.Core.DTOs;
 using Backend.Core.Dbaccess;
+using System.Text.Json;
 
 namespace Backend.Core.Api
 {
@@ -50,7 +51,7 @@ namespace Backend.Core.Api
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
-            var p = await  _productRepository.GetAll().Include(p => p.Category)
+            var p = await _productRepository.GetAll().Include(p => p.Category)
             .Include(p => p.Brand)
             .Include(p => p.ProductTags)
             .ThenInclude(pt => pt.Tag).FirstOrDefaultAsync(p => p.Id == id);
@@ -96,7 +97,7 @@ namespace Backend.Core.Api
 
             try
             {
-                await _productRepository.SaveAsync();            
+                await _productRepository.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {

@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "7777:8000"
+    environment:
+      - BASE_URL=http://api.products.app.setsudo.net
+  postgres:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: pg_container_name
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=live      
+  api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.prod
+    ports: 
+      - "5099:5013"
+
+    environment:
+      - DB_CONNECTION_STRING="Host=postgres;Database=live;Username=postgres;Password=postgres"    
+    depends_on:
+      - postgres
+
+    volumes:
+      - ./Backend:/app
+      - /app/obj/
+      - /app/bin
+
+
+ 
