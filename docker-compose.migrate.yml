@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  migrate:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    volumes:
+      - ./Backend:/app
+    working_dir: /app
+    depends_on:
+      - postgres
+      - api
+    command: >
+      bash -c "ls -la ./Backend.Core && dotnet tool install --global dotnet-ef &&
+      export PATH="$PATH:/root/.dotnet/tools" &&
+      dotnet ef database update --project Backend.Core/Backend.Core.Dbaccess --startup-project Backend.Core/Backend.Core.Api"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    deploy:
+      replicas: 0

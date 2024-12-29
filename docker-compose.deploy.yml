@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: frontend_live:latest
+    ports:
+      - "3019:3000"
+    environment:
+      - BASE_URL=http://localhost:5013
+    networks:
+      - default_live_network
+  api:
+    image: api_live:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
+    networks:
+      - default_live_network
+  postgres:
+    image: postgres_live:latest
+    networks:
+      - default_live_network
+
+
+
+
+
+
+
+networks:
+  default_live_network:
+    name: live_network

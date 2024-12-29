@@ -1,0 +1,15 @@
+services:
+  console:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    volumes:
+      - ./Backend:/app
+    working_dir: /app
+    depends_on:
+      - postgres
+      - api
+    command: >
+      dotnet run --project Backend.Core/Backend.Core.Console
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    deploy:
+      replicas: 0

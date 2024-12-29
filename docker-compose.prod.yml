@@ -5,6 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+
     ports:
       - "7777:8000"
     environment:
@@ -22,7 +23,8 @@ services:
   api:
     build:
       context: ./Backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Backend.Core/Backend.Core.Api/Dockerfile.prod.api
+      #target: webapi
     ports: 
       - "5099:5013"
 
@@ -31,10 +33,3 @@ services:
     depends_on:
       - postgres
 
-    volumes:
-      - ./Backend:/app
-      - /app/obj/
-      - /app/bin
-
-
- 
