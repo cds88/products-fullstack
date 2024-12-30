@@ -40,7 +40,7 @@ jobs:
           run: sudo apt-get install -y rsync
         - name: Deploy via rsync
           run: |
-            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no"  docker-compose.deploy.yml docker-compose.console.yml  ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_REMOTE_PATH}}
+            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no"  docker-compose.deploy.yml docker-compose.console.yml .default.env  ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_REMOTE_PATH}}
 
         - name: Deploy container
           run: |
@@ -49,8 +49,8 @@ jobs:
             echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
             docker compose -f docker-compose.prod.yml down -v  || true
  
-            docker compose -f docker-compose.deploy.yml build
-            docker compose -f docker-compose.deploy.yml up -d
+            docker compose -f docker-compose.deploy.yml --env-file ./.default.env  build
+            docker compose -f docker-compose.deploy.yml --env-file ./.default.env  up -d
 
           
 
