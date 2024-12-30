@@ -8,14 +8,14 @@ x-common-env-config: &env-config
 services:
   products_frontend:
     <<: *env-config       
-    image: frontend_products_container_prod:latest
+    image: frontend_products_image_prod:latest
     ports:
       - "${FRONTEND_PRODUCTION_PORT}:8000"
     networks:
       - default_products_deployment_network
   products_api:
     <<: *env-config      
-    image: api_products_container_prod:latest
+    image: api_products_image_prod:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
@@ -26,7 +26,7 @@ services:
 
   products_postgres:
     <<: *env-config      
-    image: postgres_products_container_prod:latest
+    image: postgres_products_image_prod:latest
     networks:
       - default_products_deployment_network
 
