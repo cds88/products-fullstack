@@ -44,8 +44,10 @@ jobs:
             docker load -i frontend_products_image_prod.tar 
             docker load -i api_products_image_prod.tar
             docker load -i postgres_products_image_prod.tar
-            rm -rf frontend_products_image_prod.tar api_products_image_prod.tar postgres_products_image_prod.tar
  
             docker compose -f docker-compose.deploy.yml up -d
+
+            rm -rf frontend_products_image_prod.tar api_products_image_prod.tar postgres_products_image_prod.tar
+
             docker system prune -f 
         
