@@ -1,19 +1,29 @@
-version: "3.8"
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
 
 services:
   migrate:
+    <<: *env-config
     image: mcr.microsoft.com/dotnet/sdk:8.0
+
     volumes:
       - ./Backend:/app
     working_dir: /app
     depends_on:
-      - postgres
-      - api
-    command: >
-      bash -c "ls -la ./Backend.Core && dotnet tool install --global dotnet-ef &&
-      export PATH="$PATH:/root/.dotnet/tools" &&
-      dotnet ef database update --project Backend.Core/Backend.Core.Dbaccess --startup-project Backend.Core/Backend.Core.Api"
+      - products_postgres
+      - products_api
+
+
+    command: > 
+      bash -c 'export PATH="$PATH:/usr/sbin:/sbin" && groupadd -g 1000 oemgroup && 
+      useradd -u 1000 -g oemgroup -m oem && dotnet tool install dotnet-ef --tool-path /usr/local/share/dotnet-tools && 
+      su oem -c "export PATH=\"$PATH:/usr/local/share/dotnet-tools\" &&  dotnet tool restore &&  dotnet ef database update --project Backend.Core/Backend.Core.Dbaccess --startup-project Backend.Core/Backend.Core.Api"
+      '
+
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    deploy:
-      replicas: 0
+
+ 

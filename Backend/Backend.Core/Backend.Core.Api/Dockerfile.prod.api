@@ -3,11 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 COPY . ./
 RUN dotnet restore Backend.Prod.sln && \
-    dotnet publish Backend.Core/Backend.Core.Api -c Release -o /app/out
+    dotnet publish Backend.Core/Backend.Core.Api -c Release -o /app/out/api && \
+    dotnet publish Backend.Core/Backend.Core.Console -c Release -o /app/out/console
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/out/api ./api
+COPY --from=build /app/out/console ./console
 EXPOSE 5013
 
-ENTRYPOINT ["dotnet", "Backend.Core.Api.dll"]
+ENTRYPOINT ["dotnet", "api/Backend.Core.Api.dll"]

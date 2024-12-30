@@ -1,52 +1,52 @@
-version: "3.8"
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
 
 services:
-  frontend:
+  products_frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "${FRONTEND_DEVELOPMENT_PORT}:${FRONTEND_DEVELOPMENT_PORT}"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
-      - api
+      - products_api
     environment:
-      - BASE_URL=http://localhost:5013
+      - BASE_URL=${FRONTEND_DEVELOPMENT_URL}
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NODE_ENV=development
     command: [ "yarn", "start" ]
-  postgres:
+  products_postgres:
+    <<: *env-config
     build:
       context: ./db
       dockerfile: Dockerfile
     container_name: live-coding
-    env_file: "./.env"
     volumes:
       - live_coding_postgres_data:/var/lib/postgresql/data
 
-  api:
-    env_file: "./.env"
+  products_api:
+    <<: *env-config
     build:
       context: ./Backend/
       dockerfile: Dockerfile.dev
     ports:
-      - "5013:5013"
-    
-    environment:
-      - DB_CONNECTION_STRING="Host=postgres;Database=live;Username=postgres;Password=postgres"
+      - "${API_DEVELOPMENT_PORT}:5013"
 
     depends_on:
-      - postgres
+      - products_postgres
 
     volumes:
       - ./Backend:/app
       - /app/obj/
       - /app/bin/
-
- 
 
 volumes:
   live_coding_postgres_data:

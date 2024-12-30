@@ -1,32 +1,38 @@
-version: "3.8"
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
 
 services:
-  frontend:
-    image: frontend_live:latest
+  products_frontend:
+    <<: *env-config       
+    image: frontend_products_container_prod:latest
     ports:
-      - "3019:3000"
-    environment:
-      - BASE_URL=http://localhost:5013
+      - "${FRONTEND_PRODUCTION_PORT}:8000"
     networks:
-      - default_live_network
-  api:
-    image: api_live:latest
+      - default_products_deployment_network
+  products_api:
+    <<: *env-config      
+    image: api_products_container_prod:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
     networks:
-      - default_live_network
-  postgres:
-    image: postgres_live:latest
+      - default_products_deployment_network
+    ports:
+      - "${API_PRODUCTION_PORT}:5013"      
+
+  products_postgres:
+    <<: *env-config      
+    image: postgres_products_container_prod:latest
     networks:
-      - default_live_network
-
-
-
+      - default_products_deployment_network
 
 
 
 
 networks:
-  default_live_network:
-    name: live_network
+  default_products_deployment_network:
+    name: products_deployment_network

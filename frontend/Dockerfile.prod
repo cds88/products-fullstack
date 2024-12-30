@@ -5,9 +5,12 @@ WORKDIR /app
 COPY yarn.lock package.json ./
 RUN yarn install
 
+ARG BASE_URL
+ENV BASE_URL=$BASE_URL
+
 COPY . .
 
-RUN yarn build
+RUN BASE_URL=$BASE_URL yarn build
 
 FROM nginx:1.25 AS final
 

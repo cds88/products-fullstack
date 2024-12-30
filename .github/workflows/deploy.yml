@@ -23,11 +23,11 @@ jobs:
         - name: Build containers
           run: docker-compose -f docker-compose.prod.yml build
         - name: Save frontend image
-          run: docker save frontend_live:latest -o frontend_live.tar
+          run: docker save frontend_products_container_prod:latest -o frontend_products_container_prod.tar
         - name: Save API Image
-          run: docker save api_live:latest -o api_live.tar
+          run: docker save api_products_container_prod:latest -o api_products_container_prod.tar
         - name: Save postgres Image
-          run: docker save postgres_live:latest -o postgres_live.tar
+          run: docker save postgres_products_container_prod:latest -o postgres_products_container_prod.tar
         
         - name: Setup SSH
           run: |
@@ -47,10 +47,10 @@ jobs:
             ssh -o StrictHostKeyChecking=no -p ${{secrets.SSH_PORT}} ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
             cd ${{secrets.SSH_BACKEND_REMOTE_PATH}}            
             docker-compose -f docker-compose.prod.yml down -v  || true
-            docker load -i postgres_live.tar
-            docker load -i api_live.tar
-            docker load -i frontend_live.tar 
-            rm -rf frontend_live.tar api_live.tar postgres_live.tar
+            docker load -i frontend_products_container_prod.tar 
+            docker load -i api_products_container_prod.tar
+            docker load -i postgres_products_container_prod.tar
+            rm -rf frontend_products_container_prod.tar api_products_container_prod.tar postgres_products_container_prod.tar
  
             docker-compose -f docker-compose.deploy.yml up -d
             docker system prune -f 

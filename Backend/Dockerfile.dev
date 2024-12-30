@@ -10,7 +10,9 @@ WORKDIR /app
 COPY --chown=oem:oem . ./
 
 
-RUN dotnet restore
+RUN dotnet restore Backend.sln
+
+ 
 
 RUN dotnet tool install --global dotnet-ef
 

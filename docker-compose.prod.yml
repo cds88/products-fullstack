@@ -1,35 +1,39 @@
-version: "3.8"
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
 
+ 
 services:
-  frontend:
+  products_frontend:
+    image: frontend_products_container_prod
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-
+      args:
+        BASE_URL: ${FRONTEND_PRODUCTION_URL}
     ports:
-      - "7777:8000"
+      - "${FRONTEND_PRODUCTION_PORT}:8000"
     environment:
-      - BASE_URL=http://api.products.app.setsudo.net
-  postgres:
+      - BASE_URL=${FRONTEND_PRODUCTION_URL}
+      - NODE_ENV=production
+ 
+  products_postgres:
+    image: postgres_products_container_prod
+    <<: *env-config       
     build:
       context: ./db
       dockerfile: Dockerfile
-    container_name: pg_container_name
-    environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=live      
-  api:
+       
+  products_api:
+    image: api_products_container_prod
+    <<: *env-config       
     build:
       context: ./Backend
       dockerfile: Backend.Core/Backend.Core.Api/Dockerfile.prod.api
-      #target: webapi
     ports: 
-      - "5099:5013"
-
-    environment:
-      - DB_CONNECTION_STRING="Host=postgres;Database=live;Username=postgres;Password=postgres"    
+      - "${API_PRODUCTION_PORT}:5013"
     depends_on:
-      - postgres
+      - products_postgres
 
