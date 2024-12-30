@@ -14,14 +14,20 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v3
 
-        - name: Build containers
-          run: docker compose -f docker-compose.prod.yml build
-        - name: Save frontend image
-          run: docker save frontend_products_image_prod:latest -o frontend_products_image_prod.tar
-        - name: Save API Image
-          run: docker save api_products_image_prod:latest -o api_products_image_prod.tar
-        - name: Save postgres Image
-          run: docker save postgres_products_image_prod:latest -o postgres_products_image_prod.tar
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
+  
+        # Step 3: Log in to Docker Hub
+        - name: Log in to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+        - name: Build and push docker images with compose
+          run: |
+            docker compose -f docker-compose.prod.yml build
+            docker compose -f docker-compose.prod.yml push
         
         - name: Setup SSH
           run: |
@@ -34,20 +40,19 @@ jobs:
           run: sudo apt-get install -y rsync
         - name: Deploy via rsync
           run: |
-            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" frontend_products_image_prod.tar api_products_image_prod.tar postgres_products_image_prod.tar docker-compose.deploy.yml docker-compose.migrate.yml docker-compose.console.yml  ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_REMOTE_PATH}}
+            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no"  docker-compose.deploy.yml docker-compose.console.yml  ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_REMOTE_PATH}}
 
         - name: Deploy container
           run: |
             ssh -o StrictHostKeyChecking=no -p ${{secrets.SSH_PORT}} ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
             cd ${{secrets.SSH_BACKEND_REMOTE_PATH}}            
+            echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
             docker compose -f docker-compose.prod.yml down -v  || true
-            docker load -i frontend_products_image_prod.tar 
-            docker load -i api_products_image_prod.tar
-            docker load -i postgres_products_image_prod.tar
  
+            docker compose -f docker-compose.deploy.yml build
             docker compose -f docker-compose.deploy.yml up -d
 
-            rm -rf frontend_products_image_prod.tar api_products_image_prod.tar postgres_products_image_prod.tar
+          
 
             docker system prune -f 
         
