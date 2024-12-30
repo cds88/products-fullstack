@@ -18,7 +18,8 @@ jobs:
               run: |
                 mkdir -p ~/.ssh              
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa              
+                chmod 600 ~/.ssh/id_rsa            
+                ssh -p ${{secrets.SSH_PORT}} -o StrictHostKeyChecking=no ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} "echo 'SSH connection successful'"  
                 # # Save the private key to a temporary file
                 # echo "$SSH_PRIVATE_KEY" > private_key
                 # chmod 600 private_key
