@@ -1,6 +1,16 @@
 {
-  "name": "TableFilters",
+  "name": "@products/components-table-filters",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "src/index.ts",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": "./index.ts"
+  },  
+  "dependencies": {
+    "@products/dependencies-web":"*"
+  },
+  "devDependencies": {
+    "@products/types":"*"
+  }
 }

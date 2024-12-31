@@ -1,0 +1,16 @@
+{
+    "name":"@products/components-table-sorters",
+    "version":"1.0.0",
+    "main": "src/index.ts",
+    "private": true,
+    "licence":"MIT",
+    "exports":{
+        ".":"./index.ts"
+    },
+    "dependencies": {
+        "@products/dependencies-web":"*"
+    },
+    "devDependencies": {
+        "@products/types":"*"
+    }
+}

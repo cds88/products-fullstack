@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "lib": ["ES6"],
+      "target": "es2020",
+      "jsx": "react-jsx",
+      "module": "commonjs",
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "noImplicitAny": true,
+      "skipLibCheck": true,
+  
+      "outDir": "dist",
+      "declaration": true,
+      "emitDeclarationOnly": true,
+  
+      
+  
+    },
+    "include": ["src/**/*", ],
+    "exclude": [
+ 
+    ]
+  }
+  

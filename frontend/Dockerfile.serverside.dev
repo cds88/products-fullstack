@@ -6,8 +6,11 @@ WORKDIR /app
 
 COPY package.json yarn.lock ./
 COPY packages ./packages
+COPY dependencies ./dependencies
+COPY components ./components
 
 COPY apps/serverside ./apps/serverside
+
 
 RUN yarn install --frozen-lockfile
 

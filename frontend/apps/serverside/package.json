@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "next": "15.1.3",
-    "@products/components-table": "*"
+    "@products/components-table": "*",
+    "@products/components-table-filters": "*",
+    "@products/components-table-sorters":"*",
+    "@products/dependencies-web":"*"
   },
   "devDependencies": {
     "typescript": "^5",

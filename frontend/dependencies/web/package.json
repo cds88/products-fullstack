@@ -1,0 +1,16 @@
+{
+  "name": "@products/dependencies-web",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "styled-components": "^6.1.13",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.3.0"    
+
+  }
+}

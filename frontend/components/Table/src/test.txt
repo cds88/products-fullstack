@@ -1,6 +1,6 @@
 import { Product } from "@products/types";
 import { ProductsTable, TableCell, TableHeader, TableTbody, TableTHead, TableTr, VirtuosoContainer } from "./styled";
-import { Virtuoso, VirtuosoProps, TableVirtuoso, TableVirtuosoProps } from "react-virtuoso";
+import { Virtuoso, VirtuosoProps, TableVirtuoso } from "react-virtuoso";
 import React, { Children } from "react";
 import MUITableContainer from "@mui/material/TableContainer";
 import MUITable from "@mui/material/Table";
@@ -9,42 +9,6 @@ import MUITableRow from "@mui/material/TableRow";
 import MUITableBody from "@mui/material/TableBody";
 import MUITableCell from "@mui/material/TableCell";
 import MUITablePaper from "@mui/material/Paper"
-
-const components: TableVirtuosoProps<Product, any>['components'] = {
-      Scroller: React.forwardRef( (props, ref)=><MUITableContainer  component={MUITablePaper}  ref={ref} {...props}  
-      
-      />),
-      Table: (props) => <MUITable {...props} style={{borderCollapse:'separate', tableLayout:'fixed'}}/>,
-      TableHead: TableTHead,
-      TableRow: MUITableRow,
-      TableBody: React.forwardRef( (props, ref) => <MUITableBody {...props} ref={ref} />)
-    }
-
-//const TableRecordRowCell = MUITableCell
-const TableRecordRowCell = TableCell
-const TableHeaderRowCell = TableRecordRowCell
-
-const TableHeaderRow =()=>{
-  return <TableTr>
-  <TableHeaderRowCell>Title</TableHeaderRowCell>
-  <TableHeaderRowCell>Category</TableHeaderRowCell>
-  <TableHeaderRowCell>Brand</TableHeaderRowCell>
-  <TableHeaderRowCell>Price</TableHeaderRowCell>
-  <TableHeaderRowCell>Rating</TableHeaderRowCell>
-  
-</TableTr>
-}
-
-const TableRecordRow : React.FC<{product:Product}> =({product})=>{
-
-  return       <  >
-  <TableRecordRowCell>{product.title}</TableRecordRowCell>
-  <TableRecordRowCell>{product.category}</TableRecordRowCell>
-  <TableRecordRowCell>{product.brand}</TableRecordRowCell>
-  <TableRecordRowCell>${product.price.toFixed(2)}</TableRecordRowCell>
-  <TableRecordRowCell>{product.rating.toFixed(2)}</TableRecordRowCell>
-</>
-}
 
 
 interface VirtualizedTableBodyProps {
@@ -60,8 +24,21 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
   return     <VirtuosoContainer>
   <TableVirtuoso
     data={products}
-    components={components}
-    fixedHeaderContent={()=> <TableHeaderRow/>}
+    components={{
+      Scroller: React.forwardRef( (props, ref)=><MUITableContainer  component={MUITablePaper}  ref={ref} {...props}/>),
+      Table: (props) => <MUITable {...props} style={{borderCollapse:'separate'}}/>,
+      TableHead: MUITableHead,
+      TableRow: MUITableRow,
+      TableBody: React.forwardRef( (props, ref) => <MUITableBody {...props} ref={ref} />)
+    }}
+    fixedHeaderContent={()=><MUITableRow>
+      <MUITableCell>Title</MUITableCell>
+      <MUITableCell>Category</MUITableCell>
+      <MUITableCell>Brand</MUITableCell>
+      <MUITableCell>Price</MUITableCell>
+      <MUITableCell>Rating</MUITableCell>
+      
+    </MUITableRow>}
     // fixedHeaderContent={() => (
     //   <MUITable.TableRow>
     //     <MUITable.TableCell style={{ width: 150, background: 'white' }}>
@@ -74,7 +51,15 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
     // )}
 
  
-    itemContent={(index, product) => <TableRecordRow product={product}/>}
+    itemContent={(index, product) => (
+      <  >
+        <MUITableCell>{product.title}</MUITableCell>
+        <MUITableCell>{product.category}</MUITableCell>
+        <MUITableCell>{product.brand}</MUITableCell>
+        <MUITableCell>${product.price.toFixed(2)}</MUITableCell>
+        <MUITableCell>{product.rating.toFixed(2)}</MUITableCell>
+      </>
+    )}
     endReached={loadProducts}
   />
 </VirtuosoContainer>

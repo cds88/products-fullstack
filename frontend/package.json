@@ -2,21 +2,28 @@
   "name": "products",
   "version": "1.0.0",
   "main": "index.js",
-  "private":true,
+  "private": true,
   "license": "MIT",
-  "scripts":{
-    "start" : "lerna run dev --parallel --stream"
+  "scripts": {
+    "start": "turbo run dev --parallel",
+    "lerna-start": "lerna run dev --parallel --stream"
   },
-  "workspaces":[
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
     "apps/*",
     "packages/*",
-    "components/*"
+    "components/*",
+    "dependencies/*"
   ],
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "lerna": "^8.1.9"
+    "@types/lodash": "^4.17.13",
+    "lerna": "^8.1.9",
+    "turbo": "^2.3.3"
   }
 }
