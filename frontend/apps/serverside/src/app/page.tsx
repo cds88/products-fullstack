@@ -1,127 +1,106 @@
 "use client";
 
 import Table from "@products/components-table";
-import TableFilters, {
-  TableFiltersProps,
-  VirtualizedTableFiltersState,
-} from "@products/components-table-filters";
-import TableSorters, {
-  TableSortersProps,
-} from "@products/components-table-sorters";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import TableFilters from "@products/components-table-filters";
 import axios from "axios";
-import { Product } from "@products/types";
-import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
+import { ThemeProvider, useMediaQuery } from "@mui/material";
+import { getTheme } from "./getTheme";
+import { useAppQueryParams } from "./hooks";
+
+import styled from "@emotion/styled"
+
+export const  Header = styled.header`
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 15px;
+`;
+
 
 export const FILTER_REQUEST_DEBOUNCE_TIMEOUT = 700;
 
 export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [skip, setSkip] = useState(0);
 
-  const [_filters, setFilters] = useState<VirtualizedTableFiltersState>({
-    title: "",
-    category: "",
-    brand: "",
-  });
-  const filtersRef = useRef<VirtualizedTableFiltersState>(_filters);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = useMemo(() => getTheme(prefersDarkMode ? "dark" : "light"), [
+    prefersDarkMode,
+  ]);
 
 
-  const [sort, setSort] = useState({ field: "", direction: "" });
-  const buildODataFilter = () => {
-    const filters = filtersRef.current
-    const filterConditions = [];
-    if (filters.title)
-      filterConditions.push(
-        `contains(tolower(title), '${filters.title.toLowerCase()}')`
-      );
-    if (filters.category)
-      filterConditions.push(`category eq '${filters.category}'`);
-    if (filters.brand) filterConditions.push(`brand eq '${filters.brand}'`);
+  const router = useRouter();
 
-    return filterConditions.length > 0
-      ? filterConditions.join(" and ")
-      : undefined;
-  };
+  const [products, setProducts] = useState([]);
 
-  const loadProducts = useCallback(async () => {
-    if (!hasMore) return;
-
-    try {
-      const params = {
-        $skip: skip,
-        $top: 30,
-        $filter: buildODataFilter(),
-
-        $sort: sort.field ? `${sort.field}:${sort.direction}` : undefined,
-      };
-      const { data: _data } = await axios.post("/api/products", { params });
-      const { $values: data } = _data;
-
-      if (data.length === 0) {
-        setHasMore(false);
-      } else {
-        setProducts((prev) => [...prev, ...data]);
-        setSkip((prev) => prev + 30);
-      }
-    } catch (error) {
-      console.error("Error loading products", error);
-    }
-  }, [hasMore, skip, _filters, sort, ]);
-
-  const handleFilterChange: TableFiltersProps["handleFilterChange"] = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-    filtersRef.current[name as keyof VirtualizedTableFiltersState] = value;
-
-    handleFilterChangeDebounce();
-  };
-
-  const handleFilterChangeDebounce = useMemo(
-    () =>
-      debounce(() => {
-        setProducts([]);
-        setSkip(0);
-        setHasMore(true);
-
-        loadProducts();
-        
-      }, 3000),
-    []
-  );
-
-  const handleSortChange: TableSortersProps["handleSortChange"] = (
-    field: string
-  ) => {
-    setSort((prev) => ({
-      field,
-      direction: prev.direction === "asc" ? "desc" : "asc",
-    }));
-    setProducts([]);
-    setSkip(0);
-    setHasMore(true);
-
-    loadProducts();
-
-  };
+  const { orderBy, filter } = useAppQueryParams();
 
   useEffect(() => {
-    loadProducts();
+    axios.post("/api/products", {}).then((results) => {
+      setProducts(results.data);
+    });
+    
   }, []);
 
-  return (
-    <div style={{
-      height: '70vh',
-      width:'70vw'
-    }}>
-      <TableFilters filters={_filters} handleFilterChange={handleFilterChange} />
+   return (
+    <ThemeProvider theme={theme}>
+      <Header><h1>Products Table</h1></Header>
+      <div aria-live="polite">
+   
 
-      <Table products={products} loadProducts={ loadProducts} handleSortChange={handleSortChange}/>
-    </div>
+        <Table
+        handleFilterChange={function (event) {
+          const name = event.currentTarget.name;
+          const value = event.currentTarget.value;
+
+          const newQueryFilters = {
+            [name]: value,
+          };
+          const queryResults = Object.entries(newQueryFilters).reduce<
+            string[]
+          >(
+            (acc, [key, val]) =>
+              val === "" ? acc : [...acc, `contains(tolower(${key}),  )`],
+            []
+          );
+
+          console.log(queryResults);
+          //router.push()
+        }}
+        filters={filter}
+          orderBy={orderBy}
+          products={products}
+          loadProducts={function () {}}
+          handleSortChange={function (event) {
+            const key = event.currentTarget.getAttribute("data-sort-key")!;
+            const order = event.currentTarget.getAttribute("data-sort-order");
+
+            const currentOrder = orderBy[key];
+
+            const newOrder = currentOrder === order ? "none" : order;
+
+            const results = {
+              ...orderBy,
+              [key]: newOrder,
+            };
+
+            const queryResults =
+              "?$orderby=" +
+              Object.entries(results)
+                .reduce<string[]>(
+                  (acc, [key, val]) =>
+                    val === "none" || undefined
+                      ? acc
+                      : [...acc, `${key} ${val}`],
+                  []
+                )
+                .join(", ");
+            router.push(queryResults);
+          }}
+        />
+      </div>
+    </ThemeProvider>
   );
 }
-
-//<TableSorters handleSortChange={handleSortChange}/>
-
-//

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 
 
@@ -57,7 +57,7 @@ export const  TableTr = styled(MUITableRow)`
   flex:1;
   width:100%;
   display: flex;
-  background: red;
+ 
 
 `
 

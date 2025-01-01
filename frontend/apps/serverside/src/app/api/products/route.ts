@@ -12,10 +12,9 @@ export async function POST(req: NextRequest) {
   try {
  
     const params =await req.json();
-    console.log("params are", params)
-     const result = await axiosClient.get(URL_ENDPOINT, params);
+      const result = await axiosClient.get(URL_ENDPOINT, params);
 
-    return NextResponse.json(result.data);
+    return NextResponse.json(result.data["$values"]);
   } catch (error) {
     console.error(error);
   }

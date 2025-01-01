@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 
 import MUITableContainer from "@mui/material/TableContainer";
@@ -68,15 +68,13 @@ export const  TableTHead = styled(MUITableHead)`
  width:100vw;
  position:fixed;
  top:0;
- background: green;
+ background: black;
  
 `
 
 export const  TableTr = styled(MUITableRow)`
  
-  
- 
-  
+   
 
 
 `

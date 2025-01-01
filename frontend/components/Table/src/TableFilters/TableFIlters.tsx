@@ -1,4 +1,4 @@
-import { FilterInput, Filters, Header } from "./styled"
+import { FilterInput, Filters, Header } from "../styled"
 export interface TableFiltersProps {
   filters: VirtualizedTableFiltersState
   handleFilterChange: React.ChangeEventHandler<HTMLInputElement>
