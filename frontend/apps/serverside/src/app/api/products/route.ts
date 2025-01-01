@@ -1,11 +1,19 @@
 import { axiosClient } from "@/utils/axiosClient";
-import { NextResponse } from "next/server";
+
+import { NextResponse, NextRequest } from "next/server";
+
+
 
 const URL_ENDPOINT = "/api/products";
 
-export async function GET() {
+
+
+export async function POST(req: NextRequest) {
   try {
-    const result = await axiosClient.get(URL_ENDPOINT);
+ 
+    const params =await req.json();
+    console.log("params are", params)
+     const result = await axiosClient.get(URL_ENDPOINT, params);
 
     return NextResponse.json(result.data);
   } catch (error) {

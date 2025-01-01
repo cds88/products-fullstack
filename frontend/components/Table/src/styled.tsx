@@ -8,6 +8,10 @@ import MUITableHead from "@mui/material/TableHead";
 import MUITableRow from "@mui/material/TableRow";
 import MUITableBody from "@mui/material/TableBody";
 import MUITableCell from "@mui/material/TableCell";
+import MUITablePaper from "@mui/material/Paper"
+import React from "react";
+import { TableVirtuosoProps } from "react-virtuoso";
+import { Product } from "@products/types";
 
 
 
@@ -33,23 +37,29 @@ padding: 10px;
 font-size: 14px;
 `;
 
-export const TableContainer = styled(MUITableContainer)`
+export const StyledTableContainer = styled(MUITableContainer)`
 
 `
 
+export const TableContainer= React.forwardRef( (props, ref:React.ForwardedRef<HTMLDivElement>)=><MUITableContainer  component={MUITablePaper}  ref={ref} {...props}  
+      
+/>)
+
 export const  ProductsTable = styled(MUITable)`
-width: 100%;
-border-collapse: collapse;
-display: flex;
-flex-direction: column;
+    table-layout: fixed;
+    border-collapse: separate;
 `;
 
 export const  TableHeader = styled(MUITableCell)`
-border: 1px solid #ddd;
+/* border: 1px solid #ddd;
 padding: 8px;
 text-align: left;
 cursor: pointer;
 background-color: #f4f4f4;
+flex:1; */
+border: 1px solid #ddd;
+ 
+text-align: left;
 flex:1;
 `;
 

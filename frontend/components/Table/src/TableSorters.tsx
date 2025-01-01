@@ -7,8 +7,7 @@ export interface TableSortersProps {
 
 const TableSorters: React.FC<TableSortersProps> =({handleSortChange})=>{
 
-    return         <TableTHead>
-    <TableTr style={{ background: "red" }}>
+    return  <TableTr >
       <TableHeader onClick={() => handleSortChange("title")}>
         Title
       </TableHeader>
@@ -25,7 +24,7 @@ const TableSorters: React.FC<TableSortersProps> =({handleSortChange})=>{
         Rating
       </TableHeader>
     </TableTr>
-  </TableTHead>
+  
 }
 
 export default TableSorters

@@ -1,34 +1,41 @@
-'use client'
- 
-import Table from '@products/components-table'
-import TableFilters, {TableFiltersProps, VirtualizedTableFiltersState} from '@products/components-table-filters'
-import TableSorters, { TableSortersProps } from '@products/components-table-sorters';
-import { useCallback,  useEffect,  useMemo,  useState } from 'react';
-import axios from 'axios';
-import { Product } from '@products/types';
-import { debounce } from 'lodash';
- 
+"use client";
 
+import Table from "@products/components-table";
+import TableFilters, {
+  TableFiltersProps,
+  VirtualizedTableFiltersState,
+} from "@products/components-table-filters";
+import TableSorters, {
+  TableSortersProps,
+} from "@products/components-table-sorters";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
+import { Product } from "@products/types";
+import { debounce } from "lodash";
 
 export const FILTER_REQUEST_DEBOUNCE_TIMEOUT = 700;
 
-
-export default function Home() { 
+export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
- 
-  const [filters, setFilters ] = useState<VirtualizedTableFiltersState>({
+
+  const [_filters, setFilters] = useState<VirtualizedTableFiltersState>({
     title: "",
     category: "",
     brand: "",
   });
-  
-  const [sort,setSort ] = useState({ field: "", direction: "" });
+  const filtersRef = useRef<VirtualizedTableFiltersState>(_filters);
+
+
+  const [sort, setSort] = useState({ field: "", direction: "" });
   const buildODataFilter = () => {
+    const filters = filtersRef.current
     const filterConditions = [];
     if (filters.title)
-      filterConditions.push(`contains(tolower(title), '${filters.title.toLowerCase()}')`);
+      filterConditions.push(
+        `contains(tolower(title), '${filters.title.toLowerCase()}')`
+      );
     if (filters.category)
       filterConditions.push(`category eq '${filters.category}'`);
     if (filters.brand) filterConditions.push(`brand eq '${filters.brand}'`);
@@ -41,7 +48,7 @@ export default function Home() {
   const loadProducts = useCallback(async () => {
     if (!hasMore) return;
 
-     try {
+    try {
       const params = {
         $skip: skip,
         $top: 30,
@@ -49,8 +56,8 @@ export default function Home() {
 
         $sort: sort.field ? `${sort.field}:${sort.direction}` : undefined,
       };
-      const { data : _data } = await axios.get("/api/products", { params });
-      const { $values : data} = _data
+      const { data: _data } = await axios.post("/api/products", { params });
+      const { $values: data } = _data;
 
       if (data.length === 0) {
         setHasMore(false);
@@ -61,11 +68,12 @@ export default function Home() {
     } catch (error) {
       console.error("Error loading products", error);
     }
-  }, [hasMore, skip, filters, sort]);  
+  }, [hasMore, skip, _filters, sort, ]);
 
-  const handleFilterChange :TableFiltersProps['handleFilterChange'] = (e) => {
+  const handleFilterChange: TableFiltersProps["handleFilterChange"] = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+    filtersRef.current[name as keyof VirtualizedTableFiltersState] = value;
 
     handleFilterChangeDebounce();
   };
@@ -76,11 +84,16 @@ export default function Home() {
         setProducts([]);
         setSkip(0);
         setHasMore(true);
-      }, FILTER_REQUEST_DEBOUNCE_TIMEOUT),
+
+        loadProducts();
+        
+      }, 3000),
     []
   );
 
-  const handleSortChange: TableSortersProps['handleSortChange'] = (field: string) => {
+  const handleSortChange: TableSortersProps["handleSortChange"] = (
+    field: string
+  ) => {
     setSort((prev) => ({
       field,
       direction: prev.direction === "asc" ? "desc" : "asc",
@@ -88,6 +101,9 @@ export default function Home() {
     setProducts([]);
     setSkip(0);
     setHasMore(true);
+
+    loadProducts();
+
   };
 
   useEffect(() => {
@@ -95,20 +111,17 @@ export default function Home() {
   }, []);
 
   return (
-    < div>
-         
-     
+    <div style={{
+      height: '70vh',
+      width:'70vw'
+    }}>
+      <TableFilters filters={_filters} handleFilterChange={handleFilterChange} />
 
-   
-       <Table products={products} loadProducts={loadProducts}/>
-
- 
-       
+      <Table products={products} loadProducts={ loadProducts} handleSortChange={handleSortChange}/>
     </div>
   );
 }
 
-
 //<TableSorters handleSortChange={handleSortChange}/>
 
-// <TableFilters filters={filters} handleFilterChange={handleFilterChange}/>
+//
