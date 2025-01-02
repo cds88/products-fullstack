@@ -19,6 +19,7 @@ export interface VirtualizedTableBodyProps {
   handleFilterChange: TableSortersProps["handleFilterChange"];
   orderBy: Record<string, string>;
   filters: Record<string, string>;
+  relations: Record<string, Record<string, unknown>[]>
 }
 const Table: React.FC<VirtualizedTableBodyProps> = ({
   products,
@@ -26,9 +27,10 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
   handleSortChange,
   orderBy,
   handleFilterChange,
-  filters
+  filters,
+  relations
 }) => {
-  return (
+   return (
     <VirtuosoContainer>
       <TableVirtuoso
         data={products}
@@ -39,6 +41,7 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
             orderBy={orderBy}
             handleFilterChange={handleFilterChange}
             filters={filters}
+            relations={relations}
           />
         )}
         itemContent={(index, product) => <TableRecordRow product={product} />}

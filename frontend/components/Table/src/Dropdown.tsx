@@ -13,33 +13,30 @@ import {
   IconButton,
 } from "@mui/material";
 
-type BeautifulDropdownProps = {
+type BeautifulDropdownProps<T extends Record<string, any>> = {
   onChange: (args: any)=>void;
   value: string;
   name: string;
+  data: T[];
+  label: string
 }
 
-const BeautifulDropdown: React.FC<BeautifulDropdownProps> = ({
+const BeautifulDropdown = <T extends Record<string, any>,>({
   onChange,
   value,
-  name
-}) => {
-  const options = [
-    { name: "Essence", id: 1 },
-    { name: "Velvet Touch", id: 2 },
-  ];
+  name,
+  data,
+  label
+}:BeautifulDropdownProps<T >) => {
+ 
+ 
 
-  const [selectedId, setSelectedId] = useState("");
-  const theme = useTheme(); // Access the current theme
-
-  const handleChange = (event: any) => {
-    setSelectedId(event.target.value);
-  };
+  if(!data) return
 
   return (
     <Box sx={{width:'100%'}}>
       <FormControl variant="outlined" fullWidth>
-        <InputLabel id="select-label">Choose an Option</InputLabel>
+        <InputLabel id="select-label">{label}</InputLabel>
         <Select
           labelId="select-label"
           value={value}
@@ -47,16 +44,22 @@ const BeautifulDropdown: React.FC<BeautifulDropdownProps> = ({
           onChange={onChange}
           name={name}
 
-          label="Choose an Option"
+          label={label}
           input={
             <OutlinedInput
-              label="Choose an Option"
+              label={label}
               endAdornment={
-                true && (
+                value && (
                   <InputAdornment position="end" sx={{marginRight:"30px"}}>
                     <IconButton
                       aria-label="clear selection"
-                      onClick={function(){}}
+                      onClick={function(){
+                        onChange({
+                          target: {
+                            name: name, value:""
+                          }
+                        })
+                      }}
                       edge="end"
                     >
                       <ClearIcon />
@@ -68,10 +71,10 @@ const BeautifulDropdown: React.FC<BeautifulDropdownProps> = ({
           }
  
         >
-          {options.map((option) => (
+          {data.map((option) => (
             <MenuItem
               key={option.id}
-              value={option.id}
+              value={option.name}
  
             >
               {option.name}

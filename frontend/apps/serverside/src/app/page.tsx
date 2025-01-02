@@ -3,92 +3,148 @@
 import Table from "@products/components-table";
 import TableFilters from "@products/components-table-filters";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { ThemeProvider, useMediaQuery } from "@mui/material";
 import { getTheme } from "./getTheme";
 import { useAppQueryParams } from "./hooks";
 
-import styled from "@emotion/styled"
+import styled from "@emotion/styled";
+import { debounce, isArray } from "lodash";
+import { parsePathString } from "./tools";
+import { axiosClient } from "@/utils/axiosClient";
 
-export const  Header = styled.header`
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 15px;
+export const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
 `;
+export const TABLE_COLUMNS = {
+  TITLE: "title",
+  CATEGORY: "category",
+  BRAND: "brand",
+  PRICE: "price",
+  RATING: "rating",
+  TAGS: "tags",
+} as const;
 
-
+const TABLE_COLUMNS_ARRAY = [
+  TABLE_COLUMNS.TITLE,
+  TABLE_COLUMNS.CATEGORY,
+  TABLE_COLUMNS.BRAND,
+  TABLE_COLUMNS.PRICE,
+  TABLE_COLUMNS.RATING,
+  TABLE_COLUMNS.TAGS,
+];
 export const FILTER_REQUEST_DEBOUNCE_TIMEOUT = 700;
 
 export default function Home() {
-
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const theme = useMemo(() => getTheme(prefersDarkMode ? "dark" : "light"), [
-    prefersDarkMode,
-  ]);
-
+  const theme = useMemo(
+    () => getTheme(prefersDarkMode ? "dark" : "light"),
+    [prefersDarkMode]
+  );
 
   const router = useRouter();
+  const pathName = usePathname();
 
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([])
-  const [brands, setBrands] = useState([])
-  const [tags, setTags] = useState([])
+  const [relations, setRelations] = useState({});
 
-  const { orderBy, filters } = useAppQueryParams();
+  const { orderBy, filters, pathString } = useAppQueryParams();
 
-  
+  const loadProducts = (qwe :any)=>{
+ 
+
+  }
 
   useEffect(() => {
-    axios.get("/api/products-relations").then(results=>{
-      console.log("results", results.data )
-      setCategories(results.data.categories.$values)
-      setBrands(results.data.brands.$values)
-      setTags(results.data.tags.$values)
-    })
+    axios.get("/api/products-relations").then((results) => {
+      setRelations(results.data);
+    });
     axios.post("/api/products", {}).then((results) => {
       setProducts(results.data);
+ 
     });
-    
   }, []);
 
-   return (
+  const debouncedFetch = useMemo(()=>debounce((params)=>{
+    axios.post("api/products", params).then((results) => {
+      setProducts(results.data);
+    }).catch(er=>{});
+  },500) ,[])
+
+  useEffect(() => {
+    const params = parsePathString({
+      orderBy,
+      filters,
+    });
+
+    debouncedFetch(params)
+
+  }, [pathString]);
+
+  return (
     <ThemeProvider theme={theme}>
-      <Header><h1>Products Table</h1></Header>
+      <Header>
+        <h1>Products Table</h1>
+      </Header>
       <div aria-live="polite">
-   
-
         <Table
-        handleFilterChange={function (event) {
+          relations={relations}
+          handleFilterChange={function (event) {
+            const name = event.target.name;
+            const value = event.target.value;
 
-          
+            const params = new URLSearchParams(pathString);
 
-          const name = event.target.name;
-           const value = event.target.value;
+            const order = params.get("$orderby");
+            const orderPrepended = order ? "$orderby=" + order : "";
 
-           
-          const newQueryFilters = {
-            [name]: value,
-          };
-          const queryResults = Object.entries(newQueryFilters).reduce<
-            string[]
-          >(
-            (acc, [key, val]) =>
-              val === "" ? acc : [...acc, `contains(tolower(${key}),  )`],
-            []
-          );
+            const queryFilters: Record<string, string> = {
+              ...filters,
+              [name]: isArray(value) ? value.join(",") : value,
+            };
 
-           console.log(queryResults);
-          // //router.push()
-        }}
-        filters={filters}
+            const filtersConditions: string[] = [];
+
+            TABLE_COLUMNS_ARRAY.forEach((key) => {
+              const val = queryFilters[key];
+              if (!val) return;
+              filtersConditions.push(`${key}=${val}`);
+            });
+
+            const filteredPrepened = orderPrepended ? "&" : "";
+
+            const urlString =
+              "?" +
+              orderPrepended +
+              filteredPrepened +
+              filtersConditions.join("&");
+
+            router.push(urlString);
+          }}
+          filters={filters}
           orderBy={orderBy}
           products={products}
-          loadProducts={function () {}}
+          loadProducts={loadProducts}
           handleSortChange={function (event) {
+            const params = new URLSearchParams(pathString);
+
+            params.delete("$orderby");
+
+            const filterConditions: string[] = [];
+            TABLE_COLUMNS_ARRAY.forEach((key) => {
+              const val = params.get(key);
+              if (!val) return;
+              filterConditions.push(`${key}=${val}`);
+            });
+
+            const stringCondition = filterConditions.join("&");
+
             const key = event.currentTarget.getAttribute("data-sort-key")!;
             const order = event.currentTarget.getAttribute("data-sort-order");
 
@@ -101,18 +157,27 @@ export default function Home() {
               [key]: newOrder,
             };
 
-            const queryResults =
-              "?$orderby=" +
-              Object.entries(results)
-                .reduce<string[]>(
-                  (acc, [key, val]) =>
-                    val === "none" || undefined
-                      ? acc
-                      : [...acc, `${key} ${val}`],
-                  []
-                )
-                .join(", ");
-            router.push(queryResults);
+            const orderCondition = Object.entries(results)
+              .reduce<string[]>(
+                (acc, [key, val]) =>
+                  val === "none" || undefined ? acc : [...acc, `${key} ${val}`],
+                []
+              )
+              .join(",");
+
+            const queryResults = orderCondition
+              ? "?$orderby=" + orderCondition
+              : "";
+
+            const nextStringcondition = queryResults
+              ? "&" + stringCondition
+              : stringCondition
+              ? "?" + stringCondition
+              : stringCondition;
+
+            const resultas = queryResults + nextStringcondition;
+
+            router.push(resultas ? resultas : "/");
           }}
         />
       </div>

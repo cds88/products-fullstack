@@ -51,7 +51,7 @@
 //   const loadProducts = useCallback(async () => {
 //     if (!hasMore) return;
 
-//     try {
+//      try {
 //       const params = {
 //         $skip: skip,
 //         $top: 30,

@@ -1,18 +1,22 @@
 import { useSearchParams } from "next/navigation";
 
-export const useAppQueryParams = ():Record<string, Record<string, string>> =>{
+
+type UseAppQueryParamsReturn = {
+  orderBy: Record<string, string>;
+  filters: Record<string, string>;
+  pathString: string;
+}
+
+
+export const useAppQueryParams = ():UseAppQueryParamsReturn =>{
 
     const searchParams = useSearchParams();
+     const searchParamsEntries = Object.fromEntries(searchParams.entries())
+    const {$orderby, ...filters} = searchParamsEntries
 
-    const searchParamsEntries = Object.fromEntries(searchParams.entries())
-    const {$orderby, $filter} = searchParamsEntries
-
-    const _filter = $filter || {}
-    const filters = {
-      brand:"",category:"",title:"", price:"", rating:"",
-      ..._filter
-    }
-    const orderByBefore = $orderby?.split(", ").reduce((acc, item)=>{
+ 
+ 
+    const orderByBefore = $orderby?.split(",").reduce((acc, item)=>{
         const [key, val] = item.trim().split(" ");
         if(!key || !val) return acc
         return {
@@ -25,7 +29,11 @@ export const useAppQueryParams = ():Record<string, Record<string, string>> =>{
        
        return {
         orderBy: orderByBefore,
-        filters
+        filters: {
+  brand:"",category:"",title:"", price:"", rating:"", tags:"",
+          ...filters
+        },
+        pathString: searchParams.toString()
        }
 
 }
