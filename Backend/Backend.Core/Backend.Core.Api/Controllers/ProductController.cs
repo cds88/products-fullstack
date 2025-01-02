@@ -47,6 +47,23 @@ namespace Backend.Core.Api
             return Ok(products);
         }
 
+        [HttpGet("relations")]
+        public async Task<IActionResult> GetProductRelations()
+        {
+            var categories = await _context.Categories.ToListAsync();
+            var brands = await _context.Brands.ToListAsync();
+            var tags = await _context.Tags.ToListAsync();
+
+            var response = new
+            {
+                Categories = categories.Select(c => new { c.Id, c.Name }),
+                Brands = brands.Select(b => new { b.Id, b.Name }),
+                Tags = tags.Select(t => new { t.Id, t.Name })
+            };
+
+            return Ok(response);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)

@@ -34,10 +34,21 @@ export default function Home() {
   const router = useRouter();
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([])
+  const [brands, setBrands] = useState([])
+  const [tags, setTags] = useState([])
 
-  const { orderBy, filter } = useAppQueryParams();
+  const { orderBy, filters } = useAppQueryParams();
+
+  
 
   useEffect(() => {
+    axios.get("/api/products-relations").then(results=>{
+      console.log("results", results.data )
+      setCategories(results.data.categories.$values)
+      setBrands(results.data.brands.$values)
+      setTags(results.data.tags.$values)
+    })
     axios.post("/api/products", {}).then((results) => {
       setProducts(results.data);
     });
@@ -52,9 +63,13 @@ export default function Home() {
 
         <Table
         handleFilterChange={function (event) {
-          const name = event.currentTarget.name;
-          const value = event.currentTarget.value;
 
+          
+
+          const name = event.target.name;
+           const value = event.target.value;
+
+           
           const newQueryFilters = {
             [name]: value,
           };
@@ -66,10 +81,10 @@ export default function Home() {
             []
           );
 
-          console.log(queryResults);
-          //router.push()
+           console.log(queryResults);
+          // //router.push()
         }}
-        filters={filter}
+        filters={filters}
           orderBy={orderBy}
           products={products}
           loadProducts={function () {}}

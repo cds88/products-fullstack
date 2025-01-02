@@ -26,6 +26,7 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
   handleSortChange,
   orderBy,
   handleFilterChange,
+  filters
 }) => {
   return (
     <VirtuosoContainer>
@@ -37,6 +38,7 @@ const Table: React.FC<VirtualizedTableBodyProps> = ({
             handleSortChange={handleSortChange}
             orderBy={orderBy}
             handleFilterChange={handleFilterChange}
+            filters={filters}
           />
         )}
         itemContent={(index, product) => <TableRecordRow product={product} />}

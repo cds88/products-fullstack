@@ -8,7 +8,7 @@ export const useAppQueryParams = ():Record<string, Record<string, string>> =>{
     const {$orderby, $filter} = searchParamsEntries
 
     const _filter = $filter || {}
-    const filter = {
+    const filters = {
       brand:"",category:"",title:"", price:"", rating:"",
       ..._filter
     }
@@ -25,7 +25,7 @@ export const useAppQueryParams = ():Record<string, Record<string, string>> =>{
        
        return {
         orderBy: orderByBefore,
-        filter
+        filters
        }
 
 }

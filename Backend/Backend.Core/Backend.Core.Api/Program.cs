@@ -20,6 +20,9 @@ builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy(
 builder.Services.AddScoped<Fetcher>();
 builder.Services.AddScoped<FetchedResultsHandler>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -20,6 +20,7 @@ export interface TableSortersProps {
   handleSortChange: React.MouseEventHandler<SVGSVGElement>;
   handleFilterChange: (args:any)=>void;
   orderBy: Record<string, string>;
+  filters: Record<string, string>;
 }
 
 const CustomTextField = styled(TextField)({
@@ -43,6 +44,8 @@ const handler = function () {};
 const TableSorters: React.FC<TableSortersProps> = ({
   handleSortChange,
   orderBy,
+  filters,
+  handleFilterChange
 }) => {
 
   const titleValue = orderBy[TABLE_COLUMNS.TITLE] || "none"
@@ -103,7 +106,7 @@ const TableSorters: React.FC<TableSortersProps> = ({
             },
           }}          
           // value={""}
-          // onChange={handler}
+           onChange={handleFilterChange}
         />
         <ArrowIndicatorWrapper >
         <ArrowDropUpIcon 
@@ -125,7 +128,7 @@ const TableSorters: React.FC<TableSortersProps> = ({
       </TableHeader>         */}
     <TableHeaderStyled  aria-sort="ascending" data-column-name={TABLE_COLUMNS.CATEGORY}  >
       <TableHeaderInner>
-        <BeautifulDropdown/>
+        <BeautifulDropdown onChange={handleFilterChange} value={filters['category']} name={"category"} />
         
       {/* <TextField
           type="text"

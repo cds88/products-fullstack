@@ -13,7 +13,17 @@ import {
   IconButton,
 } from "@mui/material";
 
-const BeautifulDropdown = () => {
+type BeautifulDropdownProps = {
+  onChange: (args: any)=>void;
+  value: string;
+  name: string;
+}
+
+const BeautifulDropdown: React.FC<BeautifulDropdownProps> = ({
+  onChange,
+  value,
+  name
+}) => {
   const options = [
     { name: "Essence", id: 1 },
     { name: "Velvet Touch", id: 2 },
@@ -32,8 +42,11 @@ const BeautifulDropdown = () => {
         <InputLabel id="select-label">Choose an Option</InputLabel>
         <Select
           labelId="select-label"
-          value={selectedId}
-          onChange={handleChange}
+          value={value}
+          //onChange={handleChange}
+          onChange={onChange}
+          name={name}
+
           label="Choose an Option"
           input={
             <OutlinedInput
