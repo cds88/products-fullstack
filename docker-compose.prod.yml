@@ -10,7 +10,7 @@ services:
     image: sercudo/frontend_products_image_prod
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.serverside.prod
       args:
         BASE_URL: ${FRONTEND_PRODUCTION_URL}
     ports:
