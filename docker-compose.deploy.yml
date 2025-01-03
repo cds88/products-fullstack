@@ -11,13 +11,10 @@ services:
     image: sercudo/frontend_products_image_prod
     networks:
       - proxy_network    
-      - default_products_deployment_network    
-
-
-
+      - default_products_deployment_network        
   products_frontend_next:
     <<: *env-config       
-    image: sercudo/frontend_products_image_prod:latest
+    image: sercudo/frontend_next_products_image_prod:latest
 
     networks:
       - default_products_deployment_network

@@ -6,6 +6,8 @@ const URL_ENDPOINT = "/api/products";
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("------------------------------------------------------------process env--------------------", process.env.NEXT_PUBLIC_BASE_URL)
+
     const params = await req.json();
 
  
