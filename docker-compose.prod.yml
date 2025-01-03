@@ -4,18 +4,17 @@ x-common-env-config: &env-config
     - path: ./.override.env
       required: false
 
- 
 services:
   products_frontend:
-    image: sercudo/frontend_products_image_prod
+    image: frontend_products_image_prod
     depends_on:
-      - products_frontend_next
+      - products_frontend_next      
     build:
       context: ./frontend
       dockerfile: Dockerfile.nginx.prod
-    
+
   products_frontend_next:
-    image: sercudo/frontend_next_products_image_prod
+    image: frontend_next_products_image_prod
     build:
       context: ./frontend
       dockerfile: Dockerfile.serverside.prod
@@ -25,20 +24,18 @@ services:
       - NEXT_PUBLIC_BASE_URL=${FRONTEND_PRODUCTION_URL}
       - NODE_ENV=production
 
-
   products_postgres:
-    image: sercudo/postgres_products_image_prod
-    <<: *env-config       
+    image: postgres_products_image_prod
+    <<: *env-config
     build:
       context: ./db
       dockerfile: Dockerfile
-       
+
   products_api:
-    image: sercudo/api_products_image_prod
-    <<: *env-config       
+    image: api_products_image_prod
+    <<: *env-config
     build:
       context: ./Backend
       dockerfile: Backend.Core/Backend.Core.Api/Dockerfile.prod.api
     depends_on:
       - products_postgres
-
