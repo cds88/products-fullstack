@@ -7,10 +7,18 @@ x-common-env-config: &env-config
 
 services:
   products_frontend:
+    <<: *env-config
+    image: sercudo/frontend_products_image_prod
+    networks:
+      - proxy_network    
+      - default_products_deployment_network    
+
+
+
+  products_frontend_next:
     <<: *env-config       
     image: sercudo/frontend_products_image_prod:latest
-    ports:
-      - "${FRONTEND_PRODUCTION_PORT}:8000"
+
     networks:
       - default_products_deployment_network
   products_api:
@@ -21,8 +29,7 @@ services:
     restart: unless-stopped
     networks:
       - default_products_deployment_network 
-    ports:
-      - "${API_PRODUCTION_PORT}:5013"      
+
 
   products_postgres:
     <<: *env-config      
@@ -36,3 +43,5 @@ services:
 networks:
   default_products_deployment_network:
     name: products_deployment_network
+  proxy_network:
+    external: true

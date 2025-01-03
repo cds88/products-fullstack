@@ -1,10 +1,10 @@
 import { axiosClient } from "@/utils/axiosClient";
 import { Brand, Category, Tag } from "@products/types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const URL_ENDPOINT = "/api/products/relations";
 
-export async function GET(req: NextRequest) {
+export async function GET( ) {
   try {
     const response = await axiosClient.get(URL_ENDPOINT);
     const data = response.data;

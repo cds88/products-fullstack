@@ -1,7 +1,6 @@
 import { axiosClient } from "@/utils/axiosClient";
 
-import { NextResponse, NextRequest } from "next/server";
-import queryString from "query-string";
+import { NextRequest, NextResponse } from "next/server";
  
 const URL_ENDPOINT = "/api/products";
 

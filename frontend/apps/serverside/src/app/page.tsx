@@ -1,7 +1,6 @@
 "use client";
 
 import Table from "@products/components-table";
-import TableFilters from "@products/components-table-filters";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -10,35 +9,11 @@ import { ThemeProvider, useMediaQuery } from "@mui/material";
 import { getTheme } from "./getTheme";
 import { useAppQueryParams } from "./hooks";
 
-import styled from "@emotion/styled";
 import { debounce, isArray } from "lodash";
+import { Header, TABLE_COLUMNS_ARRAY } from "./Components";
 import { parsePathString } from "./tools";
-import { axiosClient } from "@/utils/axiosClient";
 
-export const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-`;
-export const TABLE_COLUMNS = {
-  TITLE: "title",
-  CATEGORY: "category",
-  BRAND: "brand",
-  PRICE: "price",
-  RATING: "rating",
-  TAGS: "tags",
-} as const;
 
-const TABLE_COLUMNS_ARRAY = [
-  TABLE_COLUMNS.TITLE,
-  TABLE_COLUMNS.CATEGORY,
-  TABLE_COLUMNS.BRAND,
-  TABLE_COLUMNS.PRICE,
-  TABLE_COLUMNS.RATING,
-  TABLE_COLUMNS.TAGS,
-];
-export const FILTER_REQUEST_DEBOUNCE_TIMEOUT = 700;
 
 export default function Home() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -55,6 +30,7 @@ export default function Home() {
   const [relations, setRelations] = useState({});
 
   const { orderBy, filters, pathString } = useAppQueryParams();
+  
 
   const loadProducts = (qwe :any)=>{
  
@@ -89,6 +65,7 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
+
       <Header>
         <h1>Products Table</h1>
       </Header>
@@ -181,6 +158,7 @@ export default function Home() {
           }}
         />
       </div>
+
     </ThemeProvider>
   );
 }
