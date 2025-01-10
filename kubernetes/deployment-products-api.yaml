@@ -1,0 +1,31 @@
+#deployment-products-api.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-api
+  template:
+    metadata:
+      labels:
+        app: products-api
+    spec:
+      containers:
+        - name: products-api
+          image: sercudo/api-products-image-prod:latest
+          envFrom:
+            - configMapRef:
+                name: env-config
+          ports:
+            - containerPort: 5013
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"            
+          imagePullPolicy: Always

@@ -1,0 +1,32 @@
+#deployment-products-frontend.yaml
+#nginx container
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-frontend
+  template:
+    metadata:
+      labels:
+        app: products-frontend
+    spec:
+      containers:
+        - name: frontend-products
+          image: sercudo/frontend-products-image-prod:latest
+          envFrom:
+            - configMapRef:
+                name: env-config
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          imagePullPolicy: Always

@@ -1,0 +1,51 @@
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
+services:
+  products-frontend:
+    <<: *env-config
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.serverside.dev
+      target: development
+    ports:
+      - "${FRONTEND_DEVELOPMENT_PORT}:${FRONTEND_DEVELOPMENT_PORT}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - products-api
+    environment:
+      - NEXT_PUBLIC_BASE_URL=${FRONTEND_DEVELOPMENT_URL}
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+  products-postgres:
+    <<: *env-config
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    volumes:
+      - products_postgres_data:/var/lib/postgresql/data
+
+  products-api:
+    <<: *env-config
+    build:
+      context: ./Backend/
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${API_DEVELOPMENT_PORT}:5013"
+
+    depends_on:
+      - products-postgres
+
+    volumes:
+      - ./Backend:/app
+      - /app/obj/
+      - /app/bin/
+
+volumes:
+  products_postgres_data:

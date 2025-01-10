@@ -1,0 +1,39 @@
+#deployment-products-postgres-yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-postgres
+  template:
+    metadata:
+      labels:
+        app: products-postgres
+    spec:
+      containers:
+        - name: products-postgres
+          image: sercudo/postgres-products-image-prod:latest
+          ports:
+            - containerPort: 5432
+          env: 
+            - name: POSTGRES_HOST
+              value: products-postgres
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: products                                    
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"            
+          
+          
+          imagePullPolicy: Always

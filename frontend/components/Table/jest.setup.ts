@@ -1,0 +1,1 @@
+import "@products/dependencies-tests/jest.setup";

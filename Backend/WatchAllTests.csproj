@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+         <Platform>AnyCPU</Platform>
+        <Configuration>Debug</Configuration>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <TestProjects Include="Backend.Tests\**\*.csproj" />
+        <Watch Include="Backend.Tests\**\*.cs" />
+    </ItemGroup>
+
+    <Target Name="Test">
+        <MSBuild Targets="VSTest" Projects="@(TestProjects)" />
+    </Target>
+</Project>

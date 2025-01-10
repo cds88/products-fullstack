@@ -1,0 +1,21 @@
+{
+  "name": "@products/components-table",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@products/dependencies-web": "*",
+    "react-virtuoso": "^4.12.3"
+  },
+  "devDependencies": {
+    "@products/types": "*",
+    "@products/dependencies-tests": "*"
+  }
+}

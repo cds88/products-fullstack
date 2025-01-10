@@ -1,0 +1,27 @@
+
+
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
+services:
+  products-frontend-tests:
+    <<: *env-config
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.serverside.dev
+      target: test
+    ports:
+      - "${FRONTEND_DEVELOPMENT_PORT}:${FRONTEND_DEVELOPMENT_PORT}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      SHELL: /bin/bash      
+    depends_on:
+      - products-frontend
+ 
+    
+ 

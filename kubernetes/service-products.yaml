@@ -1,0 +1,54 @@
+#service-products.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-frontend
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30001
+
+  selector:
+    app: products-frontend
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-frontend-next
+spec:
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: products-frontend-next
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-api
+spec:
+  ports:
+    - protocol: TCP
+      port: 5013
+      targetPort: 5013
+  selector:
+    app: products-api
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-postgres
+spec:
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: products-postgres
+  type: ClusterIP

@@ -1,0 +1,15 @@
+{
+    "name": "@products/tests-regression",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "test": "playwright test"
+    },
+    "devDependencies": {
+        "@products/dependencies-tests": "*",
+        "@types/pixelmatch": "^5.2.6",
+        "@types/pngjs": "^6.0.5",
+        "pixelmatch": "^6.0.0",
+        "pngjs": "^7.0.0"
+    }
+}

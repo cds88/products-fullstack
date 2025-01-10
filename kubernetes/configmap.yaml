@@ -1,0 +1,13 @@
+#configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+data:
+  FRONTEND_PRODUCTION_URL: "http://products-api:5013"
+  NODE_ENV: "production"
+  ASPNETCORE_ENVIRONMENT: "Production"
+  POSTGRES_HOST: "products-postgres"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+  POSTGRES_DB: "products"

@@ -1,0 +1,23 @@
+
+
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
+
+services:
+  products-api-tests:
+    <<: *env-config
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./Backend:/app
+      - /app/obj/
+      - /app/bin
+    command: dotnet watch test Backend.sln --logger console;verbosity=detailed
+
+
+

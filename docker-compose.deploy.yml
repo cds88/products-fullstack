@@ -1,0 +1,48 @@
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
+
+services:
+  products:
+    <<: *env-config
+    image: sercudo/frontend-products-image-prod:latest
+    networks:
+      - proxy_network    
+      - default_products_deployment_network        
+  products-frontend-next:
+    <<: *env-config       
+    image: sercudo/frontend-next-products-image-prod:latest
+
+    networks:
+      - default_products_deployment_network
+    environment:
+      - NEXT_PUBLIC_BASE_URL=${FRONTEND_PRODUCTION_URL}
+      - NODE_ENV=production
+
+  products-api:
+    <<: *env-config      
+    image: sercudo/api-products-image-prod:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
+    networks:
+      - default_products_deployment_network 
+
+
+  products-postgres:
+    <<: *env-config      
+    image: sercudo/postgres-products-image-prod:latest
+    networks:
+      - default_products_deployment_network
+
+
+
+
+networks:
+  default_products_deployment_network:
+    name: products_deployment_network
+  proxy_network:
+    external: true

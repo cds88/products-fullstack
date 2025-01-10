@@ -1,0 +1,24 @@
+{
+    "name": "@products/dependencies-tests",
+    "version": "1.0.0",
+    "private": true,
+    "exports": {
+        "./jest.config.js": "./jest.config.js",
+        "./jest.setup": "./jest.setup.ts",
+        "./jest-preset.js": "./jest-preset.js"
+    },
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+        "@playwright/test": "^1.47.2",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.5.0",
+        "@testing-library/react": "^16.0.1",
+        "@testing-library/user-event": "^14.5.2",
+        "@types/jest": "^29.5.14",
+        "chokidar-cli": "^3.0.0",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "ts-jest": "^29.2.5"
+    }
+}

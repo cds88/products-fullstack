@@ -1,0 +1,23 @@
+x-common-env-config: &env-config
+  env_file:
+    - ./.default.env
+    - path: ./.override.env
+      required: false
+
+
+services:
+  products-frontend-admin:
+    <<: *env-config
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.admin.dev
+
+    ports: 
+      - "${FRONTEND_ADMIN_DEVELOPMENT_PORT}:${FRONTEND_ADMIN_DEVELOPMENT_PORT}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - products-api
+    environment:
+      - FRONTEND_ADMIN_DEVELOPMENT_PORT=${FRONTEND_ADMIN_DEVELOPMENT_PORT}

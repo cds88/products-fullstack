@@ -1,0 +1,47 @@
+#deployment-products-next.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-frontend-next
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: products-frontend-next
+  template:
+    metadata:
+      labels:
+        app: products-frontend-next
+    spec:
+      containers:
+        - name: products-frontend-next
+          image: sercudo/frontend-next-products-image-prod:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_BASE_URL
+              value: http://products-api:5013/
+            - name: NODE_ENV
+              value: production            
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-frontend-next
+spec:
+  selector:
+    app: products-frontend-next
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP

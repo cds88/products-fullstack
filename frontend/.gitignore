@@ -1,0 +1,7 @@
+node_modules/
+.turbo/
+
+
+tests/e2e/test-results/
+tests/regression/test-results/
+tests/regression/screenshots/

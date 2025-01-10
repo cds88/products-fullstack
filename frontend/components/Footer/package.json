@@ -1,0 +1,20 @@
+{
+  "name": "@products/components-footer",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+  "test": "jest"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@products/dependencies-web": "*",
+    "@products/dependencies-tests":"*"
+  },
+  "devDependencies": {
+    "@products/types": "*"
+  }
+}

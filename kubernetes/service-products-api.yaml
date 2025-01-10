@@ -1,0 +1,14 @@
+#service-products-api.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-api
+spec:
+
+
+  selector:
+    app: products-api
+  ports:
+    - protocol: TCP
+      port: 5013
+      targetPort: 5013
