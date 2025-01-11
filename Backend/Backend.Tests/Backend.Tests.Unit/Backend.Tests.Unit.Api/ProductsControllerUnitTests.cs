@@ -1,4 +1,3 @@
-using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Core.Api;

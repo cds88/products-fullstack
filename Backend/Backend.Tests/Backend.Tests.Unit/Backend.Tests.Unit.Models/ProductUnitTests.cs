@@ -10,10 +10,8 @@ namespace Backend.Tests.Unit.Models
         [Fact]
         public void Product_ShouldHaveRequiredTitle()
         {
-            // Arrange
             var product = new Product { Title = "Test Product" };
 
-            // Assert: Ensure Title is correctly set
             Assert.Equal("Test Product", product.Title);
         }
 
