@@ -64,7 +64,7 @@ jobs:
       - name: Deploy via rsync    
         run: |
             
-            rsync -avz --rsync-path="mkdir -p ${STAGING_DIRECTORY}" --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" ./*.txt ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${STAGING_DIRECTORY}
+            rsync -avz --rsync-path="mkdir -p ${STAGING_DIRECTORY} && rsync" --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" ./*.txt ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${STAGING_DIRECTORY}
     
     #   - name: Rebuild containers
     #     run: |
