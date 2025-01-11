@@ -47,7 +47,7 @@ jobs:
         
           
         
-          echo "${{env.STAGING_DIRECTORY}} qqwe" > "test_${TAG_NAME}.txt"
+          echo "${{env.STAGING_DIRECTORY}} qqwerr" > "test_${TAG_NAME}.txt"
           
         #   docker compose -f docker-compose.prod.yml --env-file .default.env build
         #   docker compose -f docker-compose.prod.yml --env-file .default.env push
