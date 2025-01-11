@@ -8,14 +8,14 @@ x-common-env-config: &env-config
 services:
   products:
     <<: *env-config
-    image: sercudo/frontend-products-image-prod:latest
+    image: sercudo/frontend-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     hostname: ${SERVICE_HOST:-products}
     networks:
       - proxy_network    
       - default_products_deployment_network        
   products-frontend-next:
     <<: *env-config       
-    image: sercudo/frontend-next-products-image-prod:latest
+    image: sercudo/frontend-next-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
 
     networks:
       - default_products_deployment_network
@@ -25,7 +25,7 @@ services:
 
   products-api:
     <<: *env-config      
-    image: sercudo/api-products-image-prod:latest
+    image: sercudo/api-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
@@ -35,7 +35,7 @@ services:
 
   products-postgres:
     <<: *env-config      
-    image: sercudo/postgres-products-image-prod:latest
+    image: sercudo/postgres-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - default_products_deployment_network
 

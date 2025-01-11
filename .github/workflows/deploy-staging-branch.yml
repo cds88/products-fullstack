@@ -48,6 +48,7 @@ jobs:
           
         
           echo "${{env.STAGING_DIRECTORY}} qqwerr" > "test_${TAG_NAME}.txt"
+          docker compose -f docker-compose.prod.yml --env-file .default.env config
           
         #   docker compose -f docker-compose.prod.yml --env-file .default.env build
         #   docker compose -f docker-compose.prod.yml --env-file .default.env push
@@ -64,20 +65,24 @@ jobs:
       - name: Deploy via rsync    
         run: |
             
-            rsync -avz --rsync-path="mkdir -p ${STAGING_DIRECTORY} && rsync" --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" ./*.txt ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${STAGING_DIRECTORY}
+            rsync -avz --rsync-path="mkdir -p ${STAGING_DIRECTORY} && rsync" --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" docker-compose.deploy.yml .default.env ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${STAGING_DIRECTORY}
     
-    #   - name: Rebuild containers
-    #     run: |
-    #         ssh -o StrictHostKeyChecking=no -p ${{secrets.SSH_PORT}} ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << EOF
-    #         cd ${{secrets.SSH_REMOTE_PATH}}            
+      - name: Rebuild containers
+        run: |
+            ssh -o StrictHostKeyChecking=no -p ${{secrets.SSH_PORT}} ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << EOF
+            cd ${{env.STAGING_DIRECTORY}}    
+            ls -la         
+
+            docker compose -f docker-compose.deploy.yml --env-file .default.env config
             
             
-    #         echo "${{secrets.DOCKERHUB_TOKEN}}" | docker login -u "${{secrets.DOCKERHUB_USERNAME}}" --password-stdin
-    #         docker compose -f docker-compose.deploy.yml down --rmi all -v  || true
 
-    #         docker compose -f docker-compose.deploy.yml --env-file .default.env  build
-    #         docker compose -f docker-compose.deploy.yml --env-file .default.env  up -d
-    #         docker compose -f docker-compose.deploy.yml --env-file .default.env exec products-api dotnet console/Backend.Core.Console.dll --update-db
-    #         docker compose -f docker-compose.deploy.yml --env-file .default.env exec products-api dotnet console/Backend.Core.Console.dll --fetch
+            # echo "${{secrets.DOCKERHUB_TOKEN}}" | docker login -u "${{secrets.DOCKERHUB_USERNAME}}" --password-stdin
+            # docker compose -f docker-compose.deploy.yml down --rmi all -v  || true
 
-    #         docker system prune -f 
+            # docker compose -f docker-compose.deploy.yml --env-file .default.env  build
+            # docker compose -f docker-compose.deploy.yml --env-file .default.env  up -d
+            # docker compose -f docker-compose.deploy.yml --env-file .default.env exec products-api dotnet console/Backend.Core.Console.dll --update-db
+            # docker compose -f docker-compose.deploy.yml --env-file .default.env exec products-api dotnet console/Backend.Core.Console.dll --fetch
+
+            # docker system prune -f 
