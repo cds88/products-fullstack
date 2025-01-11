@@ -1,9 +1,9 @@
-name: Deploy to remove server
+name: Deploy to staging remote server
 
 on:
     push:
         branches:
-            - staging
+            - develop
 
 jobs:
     deploy:
