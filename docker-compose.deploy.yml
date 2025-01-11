@@ -9,6 +9,7 @@ services:
   products:
     <<: *env-config
     image: sercudo/frontend-products-image-prod:latest
+    hostname: ${SERVICE_HOST:-products}
     networks:
       - proxy_network    
       - default_products_deployment_network        

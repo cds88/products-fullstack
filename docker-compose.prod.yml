@@ -6,7 +6,7 @@ x-common-env-config: &env-config
 
 services:
   products-frontend:
-    image: sercudo/frontend-products-image-prod:latest
+    image: sercudo/frontend-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     depends_on:
       - products-frontend-next      
     build:
@@ -14,7 +14,7 @@ services:
       dockerfile: Dockerfile.nginx.prod
 
   products-frontend-next:
-    image: sercudo/frontend-next-products-image-prod:latest
+    image: sercudo/frontend-next-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile.serverside.prod
@@ -25,14 +25,14 @@ services:
       - NODE_ENV=production
 
   products-postgres:
-    image: sercudo/postgres-products-image-prod:latest
+    image: sercudo/postgres-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     <<: *env-config
     build:
       context: ./db
       dockerfile: Dockerfile
 
   products-api:
-    image: sercudo/api-products-image-prod:latest
+    image: sercudo/api-products-image-prod:${DOCKER_IMAGE_TAG:-latest}
     <<: *env-config
     build:
       context: ./Backend
