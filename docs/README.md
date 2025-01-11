@@ -1,133 +1,128 @@
-# About
+# Fullstack Application for Product Placeholders
 
-Fullstack repository. 
+This repository provides a fullstack implementation for managing product placeholders fetched from [dummyjson.com](https://dummyjson.com), using C# (.NET) and Node.js/React libraries.
 
+## Key Features
 
+### Backend (C# .NET)
+- **OData Protocol**: 
+    - Implements efficient query filtering with verbose parameters.
+    - Quick configuration that works effectively [Odata documentation](https://www.odata.org/documentation/)
+- **EF ORM**: 
+    - Simplifies access to the database layer.
+    - Distinct dbaccess layer allows to share abstraction between APIs and console applications
+- **Console Application**: 
+    - Provides an interface for managing the application.
+    - Allows to quickly manage common migration chores and fetching initiating tasks on the backend
+- **Decoupled Tests**: 
+    - Tests are separated from the implementation logic for better maintainability.
+    - Unit and Integration tests deboupled from each other 
+    - XUnit and Moq implemented
 
+### Frontend (Node.js/React)
+Built using a decoupled architecture with Yarn workflows and a monorepo structure powered by TurboRepo.
 
-# Usage Guide
+#### Directory Structure
+- **`dependencies`**
+  - Manages shared, grouped dependencies between packages.
+  - Enables efficient dependency management and versioning without clutter.
+  
+- **`packages`**
+  - Includes shared libraries, such as type definitions used across the application.
 
-This guide provides instructions on how to use the application once it's installed and running.
+- **`components`**
+  - Contains a library of reusable UI components for building applications.
 
----
+- **`apps`**
+  - Workspace for main applications, which can include:
+    - Next.js applications
+    - React clients
+    - Admin panels
+    - Express lambda functions
+    - Proxy APIs
+  - **Example Application**:
+    - A Next.js application for rendering the client products app.
+    - An admin panel that shares common components (e.g., footer) with the client app.
+    - Features full hot-reload for local development and supports future versioning.
+  - Promotes efficient development with reusable building blocks.
 
-## API Overview
-
-The backend API provides CRUD functionality for the following resources:
-
-- **Products**
-- **Categories**
-- **Brands**
-- **Tags**
-
-The API supports **OData** queries for filtering, sorting, and pagination.
-
-### API Base URL
-
-- **Base URL**: `http://localhost:5013`
-
-### API Documentation
-
-The API is documented using Swagger. Access it at [http://localhost:5013/swagger](http://localhost:5013/swagger).
-
----
-
-## Endpoints
-
-### Products
-
-- **GET `/odata/products`**
-  - Fetch all products.
-  - Supports OData queries (e.g., `$filter`, `$orderby`).
-
-- **POST `/odata/products`**
-  - Add a new product.
-  - Example payload:
-    ```json
-    {
-      "title": "New Product",
-      "description": "A great product",
-      "category": "Electronics",
-      "brand": "BrandA",
-      "price": 99.99,
-      "rating": 4.5,
-      "tags": ["Tag1", "Tag2"]
-    }
-    ```
-
-### Categories
-
-- **GET `/odata/categories`**
-  - Fetch all categories.
-- **POST `/odata/categories`**
-  - Add a new category.
-
-### Brands
-
-- **GET `/odata/brands`**
-  - Fetch all brands.
-- **POST `/odata/brands`**
-  - Add a new brand.
-
-### Tags
-
-- **GET `/odata/tags`**
-  - Fetch all tags.
-- **POST `/odata/tags`**
-  - Add a new tag.
+#### Testing Framework
+- **e2e Tests**: Created with Playwright.
+- **Integration & Regression Tests**:
+  - Decoupled from implementation logic.
+  - Utilize shared dependencies.
+  - Regression tests include pixel matching to ensure visual consistency.
+- **Unit Tests**:
+  - Jest and react-testing-library
+  - Can be placed alongside components or fully decoupled, depending on developer preference.
+  - Designed for modularity and scalability.
 
 ---
 
-## Frontend Overview
+## Staging Deployment
 
-The frontend provides a user interface for managing products, categories, brands, and tags.
+The application is deployed on a staging remote server running a **proxy Docker network** with **Nginx**. This setup ensures seamless routing and scalability:
 
-### Access the Frontend
+- **Wildcard Subdomains**:
+  - The Docker proxy intercepts wildcard subdomains and translates them into Docker services hostnames. This allows developers to dynamically create staging deployment containers, which are automatically mapped to corresponding subdomain names.
 
-- URL: [http://localhost:3000](http://localhost:3000)
+- **Staging Deployment Example**:
+  - Pushing a branch named: `develop` will result in automatic deployment and routing to main deployment branch:
+    - **`products.app.setsudo.net`**
+  - Pushing a staging branch, such as `staging/test-branches`, will be deployed under:
+    - **`test-branches.app.setsudo.net`**
+  - Pushing a staging branch, such as `staging/test-branches-1`, will be deployed under:
+    - **`test-branches-1.app.setsudo.net`**  etc.
 
-### Features
-
-1. **View Products**:
-   - Browse products with filters for category, brand, price, and more.
-2. **Add Products**:
-   - Add new products using the form.
-3. **Manage Categories/Brands/Tags**:
-   - Add or edit categories, brands, and tags.
-
----
-
-## Maintenance Tasks
-
-### Database Migrations
-
-1. Add a migration:
-
-   ```bash
-   dotnet ef migrations add <MigrationName>
-   ```
-
-2. Apply the migration:
-
-   ```bash
-   dotnet ef database update
-   ```
+- **Seamless Communication**:
+  - The Next.js application communicates at the network level with other containers. This enables developers to stack images and services at their own will, orchestrating them dynamically without manual configuration.
+  - This deployment strategy simplifies the process for staging , providing flexibility, scalability, and automation for developers.
+  - Environment orchestrations are isolated from one another, enabling the full utilization of the testing process.
 
 ---
 
-## Troubleshooting
+### Production Deployment
+Production deployment is powered by **Kubernetes**, **Terraform**, and **Ansible**, ensuring a robust, scalable, and automated environment:
 
-### Common Issues
+- **Kubernetes**:
+  - Manages container orchestration with features like load balancing, scaling, and service discovery.
+  - YAML configuration files for deployment, services, and ingress ensure consistency and flexibility.
+  - Examples in the repository:
+    - `deployment-products-api.yaml`
+    - `deployment-products-next.yaml`
+    - `ingress-products.yaml`
 
-1. **API Not Starting**:
-   - Verify the PostgreSQL database is running and accessible.
-   - Check the `appsettings.json` connection string.
+- **Terraform**:
+  - Automates infrastructure provisioning and ensures infrastructure as code (IaC) for consistency and repeatability.
+  - Configuration files, such as `main.tf`, demonstrate cloud-based deployment setup.
 
-2. **Frontend Not Loading**:
-   - Ensure `yarn install` has been run in the `frontend` directory.
-   - Verify the `BASE_URL` environment variable is correctly set.
+- **Ansible**:
+  - Used for configuration management and automation of tasks such as software installation, updates, and orchestration.
+  - Example: `playbook.yml` for deploying updates or managing services.
 
-3. **Swagger UI Not Accessible**:
-   - Confirm the API is running on port 5013.
+- **Dynamic Load Handling**:
+  - Kubernetes enables seamless scaling to handle variable workloads.
+  - The system allows for zero-downtime updates and efficient resource utilization.
 
-For additional support, consult the application logs or contact the development team.
+### Deployment Pipeline
+The deployment pipeline integrates:
+- CI/CD workflows defined in `.github/workflows/`
+  - `deploy-staging.yml`: Deployment workflow reponsible for main staging environment. Works on push to develop branch
+  - `deploy-staging-branch.yml`: Action workflow designed to deploy distinct staging branches to their corresponding environments
+- Automated testing and infrastructure validation steps.
+- Support for multiple environments, including staging and production.
+
+---
+
+
+## Highlights
+- **Separation of Concerns**: Enforced across multiple levels for clean and maintainable architecture.
+- **Containerization**: Supports separation of environments and orchestration.
+- **Hot Reload**: Streamlines local development.
+- **Scalability**: Designed for modularity, enabling efficient collaboration and future enhancements.
+
+
+## Summary
+This repository showcases a modern fullstack application with a focus on clean architecture, efficient workflows, and developer productivity. It demonstrates best practices in both backend and frontend development, offering a scalable solution for building robust applications.
+
+ 
