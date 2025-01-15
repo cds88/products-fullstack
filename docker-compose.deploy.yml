@@ -11,8 +11,10 @@ services:
     image: sercudo/frontend-products-image-prod:${STAGING_NAME:-latest}
     hostname: ${STAGING_NAME:-products}
     networks:
-      - proxy_network    
-      - default_products_deployment_network        
+      proxy_network:
+        aliases:
+          - ${STAGING_NAME:-products}
+      default_products_deployment_network:
   products-frontend-next:
     <<: *env-config       
     image: sercudo/frontend-next-products-image-prod:${STAGING_NAME:-latest}
@@ -34,7 +36,7 @@ services:
 
 
   products-postgres:
-    <<: *env-config      
+    <<: *env-config     
     image: sercudo/postgres-products-image-prod:${STAGING_NAME:-latest}
     networks:
       - default_products_deployment_network
